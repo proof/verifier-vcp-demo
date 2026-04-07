@@ -1,0 +1,149 @@
+@import "tailwindcss";
+
+:root {
+  --default: #000e32;
+  --foreground: #ffffff;
+  --primary: #0046fa;
+  --primary-dark: #0032b0;
+  --elevated: #0b1f3f;
+}
+
+@theme inline {
+  --font-sans: var(--font-inter);
+  --color-primary: #0046fa;
+  --color-primary-dark: #0032b0;
+  --color-default: #000e32;
+  --color-elevated: #0b1f3f;
+}
+
+@layer base {
+  * {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+  }
+
+  :is(
+    a,
+    button,
+    input,
+    select,
+    textarea,
+    [role="button"],
+    [role="tab"],
+    [tabindex]
+  ) {
+    transition: outline-color 0.15s ease;
+  }
+}
+
+:focus-visible {
+  outline-color: var(--primary);
+}
+
+[aria-invalid="true"] {
+  outline-color: var(--color-red-400);
+}
+
+body {
+  background: var(--default);
+  color: var(--foreground);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(0) scale(0);
+    opacity: 0;
+    animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  25% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+    animation-timing-function: ease-in;
+  }
+  75% {
+    transform: translateY(70vh) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(105vh) scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes party-popper {
+  0% {
+    transform: scale(0.95) rotate(-5deg);
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  50% {
+    transform: scale(1.05) rotate(10deg);
+    opacity: 1;
+    animation-timing-function: ease-out;
+  }
+  70% {
+    transform: scale(0.95) rotate(-5deg);
+  }
+  85% {
+    transform: scale(1.05) rotate(3deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pop-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@theme inline {
+  --animate-pop-in: pop-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  --animate-pop-out: pop-out 0.3s ease-in forwards;
+  --animate-fade-in: fade-in 0.35s ease forwards;
+  --animate-fade-out: fade-out 0.3s ease-in forwards;
+  --animate-wiggle: party-popper 0.7s 0.35s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

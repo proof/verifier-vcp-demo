@@ -1,0 +1,259 @@
+@keyframes orb-1 {
+  0% {
+    transform: translate(0, 0) scale(1);
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  20% {
+    transform: translate(40vw, 18vh) scale(1);
+    animation-timing-function: cubic-bezier(0, 0, 0.15, 1);
+  }
+  38% {
+    transform: translate(10vw, 46vh) scale(1.3);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  55% {
+    transform: translate(15vw, 42vh) scale(1.3);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  70% {
+    transform: translate(8vw, 50vh) scale(1.3);
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  85% {
+    transform: translate(-10vw, 8vh) scale(1);
+    animation-timing-function: cubic-bezier(0, 0, 0.15, 1);
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+@keyframes orb-2 {
+  0% {
+    transform: translate(0, 0) scale(1);
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  22% {
+    transform: translate(-38vw, -25vh) scale(1);
+    animation-timing-function: cubic-bezier(0, 0, 0.15, 1);
+  }
+  40% {
+    transform: translate(-12vw, -48vh) scale(1.25);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  58% {
+    transform: translate(-16vw, -44vh) scale(1.25);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  72% {
+    transform: translate(-8vw, -50vh) scale(1.25);
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+@keyframes orb-3 {
+  0% {
+    transform: translate(0, 0) scale(1);
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  25% {
+    transform: translate(-32vw, 22vh) scale(1);
+    animation-timing-function: cubic-bezier(0, 0, 0.15, 1);
+  }
+  42% {
+    transform: translate(-8vw, 10vh) scale(1.35);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  58% {
+    transform: translate(-12vw, 14vh) scale(1.35);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  72% {
+    transform: translate(-6vw, 8vh) scale(1.35);
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  88% {
+    transform: translate(20vw, -28vh) scale(1);
+    animation-timing-function: cubic-bezier(0, 0, 0.15, 1);
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+@keyframes orb-4 {
+  0% {
+    transform: translate(0, 0) scale(1);
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  18% {
+    transform: translate(28vw, -25vh) scale(1);
+    animation-timing-function: cubic-bezier(0, 0, 0.15, 1);
+  }
+  36% {
+    transform: translate(12vw, -10vh) scale(1.2);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  54% {
+    transform: translate(8vw, -14vh) scale(1.2);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  70% {
+    transform: translate(14vw, -8vh) scale(1.2);
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  85% {
+    transform: translate(-18vw, -22vh) scale(1);
+    animation-timing-function: cubic-bezier(0, 0, 0.15, 1);
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+@keyframes orb-6 {
+  0% {
+    transform: translate(0, 0) scale(1);
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  18% {
+    transform: translate(20vw, -25vh) scale(1);
+    animation-timing-function: cubic-bezier(0, 0, 0.15, 1);
+  }
+  36% {
+    transform: translate(18vw, -10vh) scale(1.2);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  54% {
+    transform: translate(8vw, -14vh) scale(1.2);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  70% {
+    transform: translate(14vw, -8vh) scale(1.2);
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  85% {
+    transform: translate(-18vw, -22vh) scale(1);
+    animation-timing-function: cubic-bezier(0, 0, 0.15, 1);
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+.mesh-gradient {
+  background: var(--background);
+  opacity: 0.5;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.mesh-gradient .mesh-orb {
+  position: absolute;
+  border-radius: 50%;
+  will-change: transform;
+}
+
+/* Blue — anchored top-left, sweeps right and down into center */
+.mesh-gradient .mesh-orb-1 {
+  width: 80vw;
+  height: 70vh;
+  top: -15vh;
+  left: -10vw;
+  background: var(--primary);
+  filter: blur(70px);
+  opacity: 0.65;
+  animation: orb-1 30s ease-in-out infinite;
+}
+
+/* Blue — anchored bottom-right, sweeps left and up into center */
+.mesh-gradient .mesh-orb-2 {
+  width: 75vw;
+  height: 65vh;
+  bottom: -15vh;
+  right: -10vw;
+  background: var(--primary);
+  filter: blur(70px);
+  opacity: 0.6;
+  animation: orb-2 38s ease-in-out infinite;
+  animation-delay: -4s;
+}
+
+/* White — anchored top-right, drifts left and down */
+.mesh-gradient .mesh-orb-3 {
+  width: 55vw;
+  height: 50vh;
+  top: -15vh;
+  right: -10vw;
+  background: white;
+  filter: blur(75px);
+  opacity: 0.38;
+  animation: orb-3 45s ease-in-out infinite;
+  animation-delay: -5s;
+}
+
+/* Dark — anchored bottom-left, sweeps right and up */
+.mesh-gradient .mesh-orb-4 {
+  width: 85vw;
+  height: 75vh;
+  bottom: -20vh;
+  left: -10vw;
+  background: #00060f;
+  filter: blur(60px);
+  opacity: 0.92;
+  animation: orb-4 52s ease-in-out infinite;
+  animation-delay: -7s;
+}
+
+/* Dark — anchored top-right, sweeps upper-left */
+.mesh-gradient .mesh-orb-5 {
+  width: 85vw;
+  height: 75vh;
+  top: -20vh;
+  right: -10vw;
+  background: #00060f;
+  filter: blur(60px);
+  opacity: 0.92;
+  animation: orb-2 44s ease-in-out infinite;
+  animation-delay: -20s;
+}
+
+/* Dark — starts above viewport, dips down through upper center */
+.mesh-gradient .mesh-orb-6 {
+  width: 85vw;
+  height: 75vh;
+  top: -60vh;
+  right: 25vw;
+  background: #00060f;
+  filter: blur(60px);
+  opacity: 0.92;
+  animation: orb-6 34s ease-in-out infinite;
+  animation-delay: -10s;
+}
+
+/* Dark — right side mid, keeps right edge contained */
+.mesh-gradient .mesh-orb-7 {
+  width: 65vw;
+  height: 65vh;
+  top: 20vh;
+  right: -35vw;
+  background: #00060f;
+  filter: blur(60px);
+  opacity: 0.92;
+  animation: orb-6 54s ease-in-out infinite;
+}
+
+/* Dark — lower left, keeps left edge contained */
+.mesh-gradient .mesh-orb-8 {
+  width: 85vw;
+  height: 75vh;
+  bottom: -20vh;
+  left: -50vw;
+  background: #00060f;
+  filter: blur(60px);
+  opacity: 0.92;
+  animation: orb-6 24s ease-in-out infinite;
+}

@@ -1,0 +1,16 @@
+.next
+.env
+.env.local
+node_modules
+out
+next-env.d.ts
+
+# Nix
+.devenv/
+.direnv/
+
+# OS
+**/.DS_Store
+
+# Editor
+.vscode/

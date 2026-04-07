@@ -1,0 +1,31 @@
+{
+  "@context": [
+    "https://www.w3.org/2018/credentials/v1",
+    "https://ap2-protocol.org/contexts/v1"
+  ],
+  "type": ["VerifiableCredential", "AP2IntentMandate"],
+  "id": "urn:uuid:intent-mandate-891",
+  "issuer": "did:example:user-wallet-001",
+  "issuanceDate": "2024-01-15T09:00:00Z",
+  "expirationDate": "2024-01-15T21:00:00Z",
+  "credentialSubject": {
+    "payer": {
+      "id": "did:example:user-wallet-001"
+    },
+    "agent": {
+      "id": "did:example:orion-agent-001",
+      "name": "Orion"
+    },
+    "prompt_summary": "Find me a 4-season backpacking tent from Summit Co under $500",
+    "shopping_intent": {
+      "category": "camping-gear",
+      "merchant": "summitco.com",
+      "max_amount": { "currency": "USD", "value": 500.0 }
+    },
+    "payment_methods": ["did:example:visa-token-7829"],
+    "risk_payload": {
+      "device_id": "7c810ac9d1bed620e66595f955492ec459022d405c5a4c2e9e21ccbc858349"
+    },
+    "ttl": 43200
+  }
+}
