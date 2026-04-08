@@ -1,0 +1,31 @@
+{
+  "@context": ["https://www.w3.org/2018/credentials/v1"],
+  "type": ["VerifiableCredential", "TransactionAuthorizationRequest"],
+  "id": "urn:uuid:tar-wire-88291",
+  "issuer": {
+    "id": "did:example:sterling-union",
+    "name": "Sterling & Union"
+  },
+  "issuanceDate": "2024-01-15T14:22:31Z",
+  "expirationDate": "2024-01-15T14:37:31Z",
+  "credentialSubject": {
+    "transactionId": "wire-txn-88291",
+    "source": {
+      "institution_name": "Sterling & Union",
+      "individual_name": "Sterling & Union",
+      "account_number": "4821",
+      "routing_number": "091000456"
+    },
+    "recipient": {
+      "institution_name": "Crestline Financial",
+      "individual_name": "Acme Corp LLC",
+      "account_number": "7293",
+      "routing_number": "055000123"
+    },
+    "amount": 5000.0,
+    "currency": "USD",
+    "memo": "Invoice #2024-089",
+    "requestedCredentials": ["ProofGovernmentId"],
+    "ttl": 900
+  }
+}

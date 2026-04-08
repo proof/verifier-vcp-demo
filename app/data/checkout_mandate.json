@@ -1,0 +1,31 @@
+{
+  "@context": [
+    "https://www.w3.org/2018/credentials/v1",
+    "https://ucp.dev/contexts/ap2-mandate/v1"
+  ],
+  "type": ["VerifiableCredential", "CheckoutMandate"],
+  "id": "urn:uuid:cart-mandate-789",
+  "issuer": "did:example:buyer-agent-001",
+  "issuanceDate": "2024-01-15T10:30:45Z",
+  "credentialSubject": {
+    "checkoutId": "chk_abc123",
+    "merchantId": "did:example:merchant-101",
+    "lineItems": [
+      {
+        "id": "ticket-001",
+        "description": "Drive Shaft – General Admission, The Roadhouse (18+), May 6 2026",
+        "quantity": 2,
+        "unitPrice": "40.00",
+        "fees": "11.40"
+      }
+    ],
+    "totals": {
+      "subtotal": "80.00",
+      "fees": "22.80",
+      "total": "102.80",
+      "currency": "USD"
+    },
+    "merchantAuthorization": "eyJhbGciOiJFUzI1NiIsImtpZCI6Im1lcmNoYW50XzIwMjUifQ..stub",
+    "scope": "checkout.complete"
+  }
+}
