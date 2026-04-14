@@ -74,6 +74,7 @@ export default function Home() {
     response_type: "vp_token",
     client_id: clientId[useCase],
     redirect_uri: REDIRECT_URI,
+    response_mode: 'fragment',
     scope: "urn:proof:params:scope:verifiable-credentials:basic",
     login_hint: email,
     nonce: nonce || "",
