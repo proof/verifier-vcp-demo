@@ -22,9 +22,23 @@ import {
 } from "./lib/environments";
 import { TRANSACTION_DATA } from "./data/transaction_data";
 
+const getEnvFromReferrer = (referrer: string) => {
+  if (/\.next\.proof\.com/.test(referrer)) {
+    return "next";
+  }
+  if (/\.staging\.proof\.com/.test(referrer)) {
+    return "staging";
+  }
+  return "fairfax";
+};
+
 export default function Home() {
   const [useCase, setUseCase] = useState<UseCase>("merchant");
-  const [env, setEnv] = useState<Environment>("fairfax");
+  const [env, setEnv] = useState<Environment>(() =>
+    typeof document !== "undefined"
+      ? getEnvFromReferrer(document.referrer)
+      : "fairfax",
+  );
   const [email, setEmail] = useState("");
   const [presentation, setPresentation] = useState<
     Partial<Record<UseCase, ParsedVPToken>>
