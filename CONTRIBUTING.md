@@ -19,7 +19,7 @@ If you have a feature idea, open a GitHub Discussion before starting work on it.
 
 ## Coding standards
 
-Code formatting is enforced with Prettier (including Tailwind class sorting). Check your code against the project's standards by running:
+Code formatting is enforced with Prettier. Check your code against the project's standards by running:
 
 ```sh
 npm run lint
@@ -35,7 +35,7 @@ npm run format
 
 When submitting a pull request:
 
-- Make sure your branch is up to date with `main`
+- Start by forking the repo and branching off of `main`
 - Include a clear title and description explaining what changed and why
 - Keep changes focused, try to limit one issue or feature per PR
 
