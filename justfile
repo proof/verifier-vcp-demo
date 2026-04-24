@@ -17,7 +17,7 @@ format:
 # installs the dependencies
 alias i := install
 install:
-    npm ci
+    npm install
 
 # checks the code for linting errors
 lint:
