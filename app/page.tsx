@@ -108,14 +108,18 @@ export default function Home() {
   };
 
   useEffect(() => {
-    const { environment, clientId } = ENVIRONMENTS[environmentKey];
+    const { environment, clientId, clientSecret } =
+      ENVIRONMENTS[environmentKey];
+    const pushed = authzMethod === "pushed";
     init({
       environment,
-      clientId: clientId[useCase],
-      callbackUri: callbackURI(origin, responseMode),
-      responseMode,
+      client_id: clientId[useCase],
+      client_secret: pushed ? clientSecret[useCase] : undefined,
+      response_mode: responseMode,
+      callback_uri: callbackURI(origin, responseMode),
+      use_pushed_authorization_request: pushed,
     });
-  }, [useCase, environmentKey, responseMode, origin]);
+  }, [useCase, environmentKey, responseMode, authzMethod, origin]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.hash.slice(1));
