@@ -31,9 +31,13 @@ export function AuthForm({
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
-    if (authzMethod !== "pushed") return;
+    if (authzMethod !== "pushed") {
+      return;
+    }
     const button = formRef.current?.querySelector("proof-verify-id");
-    if (!button) return;
+    if (!button) {
+      return;
+    }
 
     const intercept = (event: Event) => {
       event.preventDefault();

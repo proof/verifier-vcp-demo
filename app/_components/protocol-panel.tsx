@@ -53,7 +53,7 @@ export function ProtocolPanel({
                 <div className="rounded bg-gray-950 px-3 py-2 font-mono text-sm text-red-400">
                   {error}
                 </div>
-              ) : (
+              ) : presentation ? (
                 <Visualizer
                   data={presentation}
                   defaultOpenKeys={[
@@ -63,6 +63,18 @@ export function ProtocolPanel({
                     "kbJwt",
                   ]}
                 />
+              ) : (
+                <div className="rounded-lg bg-gray-950 p-6 text-center text-sm">
+                  <img
+                    src="/card-illustration.svg"
+                    alt=""
+                    className="mx-auto mt-8"
+                  />
+                  <p className="mt-6 mb-6 font-mono leading-6 text-gray-400">
+                    Your VC payload information will appear here after you
+                    complete the&nbsp;demo
+                  </p>
+                </div>
               )}
             </div>
           ),

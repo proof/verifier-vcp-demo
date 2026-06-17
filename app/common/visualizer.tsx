@@ -191,7 +191,7 @@ function ExpandedView({
       </button>
       <div
         tabIndex={0}
-        className="flex flex-col overflow-auto rounded bg-gray-950 p-6 font-mono text-sm text-gray-500"
+        className="flex flex-col overflow-auto rounded bg-gray-950 p-6 pt-10 font-mono text-sm text-gray-500"
       >
         {isEmpty(data) ? (
           <span>

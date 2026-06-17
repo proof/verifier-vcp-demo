@@ -4,7 +4,13 @@
   --default: #000e32;
   --foreground: #ffffff;
   --primary: #0046fa;
-  --primary-dark: #0032b0;
+  --primary-80: #071072;
+  --primary-60: #0025dc;
+  --primary-50: #0046fa;
+  --primary-40: #1b89fc;
+  --primary-30: #82bdfa;
+  --primary-10: #c2e2ff;
+  --primary-5: #e6f4ff;
   --elevated: #0b1f3f;
 }
 
@@ -12,6 +18,13 @@
   --font-sans: var(--font-inter);
   --color-primary: #0046fa;
   --color-primary-dark: #0032b0;
+  --color-primary-80: #071072;
+  --color-primary-60: #0025dc;
+  --color-primary-50: #0046fa;
+  --color-primary-40: #1b89fc;
+  --color-primary-30: #82bdfa;
+  --color-primary-10: #c2e2ff;
+  --color-primary-5: #e6f4ff;
   --color-default: #000e32;
   --color-elevated: #0b1f3f;
 }
