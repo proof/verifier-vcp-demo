@@ -14,7 +14,6 @@ import {
   ensureNonce,
   nonceServerSnapshot,
   nonceSnapshot,
-  rotateNonce,
   subscribeNonce,
 } from "../../lib/util";
 import {
@@ -28,35 +27,10 @@ import Link from "next/link";
 import { ArrowRightIcon } from "../../common/icons";
 import { Footer } from "../../_components/footer";
 import { authorizationRequestPreview } from "../../lib/request_preview";
-
-type Presentation = { vpToken: string; result: Record<string, unknown> };
-
-const fetchVPToken = async (responseCode: string): Promise<string> => {
-  const response = await fetch(`/api/search?response_code=${responseCode}`);
-  if (!response.ok) throw new Error(`fetch token failed: ${response.status}`);
-  const json = await response.json();
-  return json["vp_token"];
-};
-
-const verifyVPToken = async (
-  token: string,
-  nonce: string,
-): Promise<Record<string, unknown>> => {
-  const response = await fetch("/api/verify_vp_token", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ vp_token: token, nonce }),
-  });
-  const json = await response.json();
-  if (!response.ok) {
-    throw new Error(
-      typeof json?.error === "string"
-        ? json.error
-        : `verification failed: ${response.status}`,
-    );
-  }
-  return json;
-};
+import {
+  consumePresentationFromHash,
+  type Presentation,
+} from "../../lib/presentation";
 
 export function Wrapper({ useCase }: { useCase: UseCase }) {
   const { env, responseMode, authzMethod } = useDemoSettings();
@@ -77,51 +51,27 @@ export function Wrapper({ useCase }: { useCase: UseCase }) {
   );
 
   useEffect(() => {
-    const { environment, clientId, clientSecret } = ENVIRONMENTS[env];
-    const pushed = authzMethod === "pushed";
+    const { environment, clientId } = ENVIRONMENTS[env];
     init({
       environment,
-      client_id: clientId[useCase],
-      client_secret: pushed ? clientSecret[useCase] : undefined,
-      response_mode: responseMode,
-      callback_uri: callbackURI(origin, responseMode),
-      use_pushed_authorization_request: pushed,
+      clientId: clientId[useCase],
+      responseMode: responseMode,
+      callbackUri: callbackURI(origin, responseMode),
     });
   }, [useCase, env, responseMode, authzMethod, origin]);
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.hash.slice(1));
-    const state = params.get("state");
-    const responseCode = params.get("response_code");
-    const vpToken = params.get("vp_token");
-
-    if (!vpToken && !responseCode) {
-      ensureNonce();
-      return;
-    }
-
-    if (state !== useCase) {
-      return;
-    }
-
-    const previousNonce = rotateNonce();
-
-    const resolveToken = vpToken
-      ? Promise.resolve(vpToken)
-      : fetchVPToken(responseCode!);
-
-    resolveToken
-      .then((token) => {
-        if (!previousNonce) throw new Error("missing nonce");
-        return verifyVPToken(token, previousNonce).then((result) => ({
-          vpToken: token,
-          result,
-        }));
-      })
-      .then(setPresentation)
-      .catch((cause) =>
-        setError(cause instanceof Error ? cause.message : String(cause)),
-      );
+    consumePresentationFromHash(useCase).then((outcome) => {
+      if (!outcome) {
+        ensureNonce();
+        return;
+      }
+      if ("presentation" in outcome) {
+        setPresentation(outcome.presentation);
+      } else {
+        setError(outcome.error);
+      }
+    });
   }, [useCase]);
 
   const { endpoint, params: requestParams } = authorizationRequestPreview({

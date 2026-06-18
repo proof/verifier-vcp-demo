@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useId, useRef, useState } from "react";
+import { useId, useState } from "react";
 import "@proof.com/proof-vc-web";
 import { type ResponseMode } from "@proof.com/proof-vc-web";
 import { clsx } from "clsx";
@@ -28,54 +28,29 @@ export function AuthForm({
   const emailErrorId = useId();
   const [showEmailError, setShowEmailError] = useState(false);
   const transactionData = TRANSACTION_DATA[useCase];
-  const formRef = useRef<HTMLFormElement>(null);
 
-  useEffect(() => {
-    if (authzMethod !== "pushed") {
-      return;
-    }
-    const button = formRef.current?.querySelector("proof-verify-id");
-    if (!button) {
-      return;
-    }
-
-    const intercept = (event: Event) => {
-      event.preventDefault();
-      event.stopImmediatePropagation();
-
-      void (async () => {
-        const response = await fetch("/api/par", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            environmentKey,
-            useCase,
-            responseMode,
-            nonce,
-            loginHint: email,
-          }),
-        });
-        const json = await response.json();
-        if (response.ok && typeof json.url === "string") {
-          window.location.href = json.url;
-        }
-      })();
-    };
-
-    button.addEventListener("click", intercept, true);
-    return () => button.removeEventListener("click", intercept, true);
-  }, [authzMethod, environmentKey, useCase, responseMode, nonce, email]);
+  const resolveAuthorizationUrl = async () => {
+    const response = await fetch("/api/par", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        environmentKey,
+        useCase,
+        responseMode,
+        nonce,
+        loginHint: email,
+      }),
+    });
+    const json = await response.json();
+    return response.ok && typeof json.url === "string" ? json.url : null;
+  };
 
   return (
     <form
-      ref={formRef}
       style={{ display: "contents" }}
       onSubmit={(e) => {
         e.preventDefault();
-        e.currentTarget
-          .querySelector("proof-verify-id")
-          ?.shadowRoot?.querySelector("button")
-          ?.click();
+        e.currentTarget.querySelector<HTMLElement>("proof-verify-id")?.click();
       }}
     >
       <label htmlFor="email" className="flex flex-col gap-1">
@@ -127,6 +102,9 @@ export function AuthForm({
           size="medium"
           login-hint={email}
           transactionData={transactionData}
+          resolveAuthorizationUrl={
+            authzMethod === "pushed" ? resolveAuthorizationUrl : undefined
+          }
           style={{ display: "flex", flexDirection: "column", width: "100%" }}
         />
       )}
