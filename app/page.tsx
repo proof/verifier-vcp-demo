@@ -10,6 +10,10 @@ import {
   LockIcon,
   RobotFillIcon,
 } from "./common/icons";
+import {
+  settingsToQuery,
+  useDemoSettings,
+} from "./_components/demo-settings-context";
 
 const USE_CASE_ROUTES: Record<string, string> = {
   merchant: "/payment",
@@ -19,6 +23,8 @@ const USE_CASE_ROUTES: Record<string, string> = {
 
 export default function Home() {
   const router = useRouter();
+  const { env, responseMode, authzMethod } = useDemoSettings();
+  const query = settingsToQuery({ env, responseMode, authzMethod });
 
   useEffect(() => {
     const hash = window.location.hash.slice(1);
@@ -126,7 +132,7 @@ export default function Home() {
               </h4>
               <div className="mb-3">
                 <LinkItem
-                  href="/payment"
+                  href={`/payment?${query}`}
                   title="Payment"
                   subtitle="Verify your identity to complete a concert ticket purchase."
                   icon={
@@ -136,7 +142,7 @@ export default function Home() {
               </div>
               <div className="mb-3">
                 <LinkItem
-                  href="/wire"
+                  href={`/wire?${query}`}
                   title="Wire Transfer"
                   subtitle="Verify your identity to authorize a wire transfer."
                   icon={
@@ -146,7 +152,7 @@ export default function Home() {
               </div>
               <div className="mb-3">
                 <LinkItem
-                  href="/agent-authorization"
+                  href={`/agent-authorization?${query}`}
                   title="Agent Authorization"
                   subtitle="Verify your identity to delegate scoped intent to an AI agent to shop on your behalf."
                   icon={
