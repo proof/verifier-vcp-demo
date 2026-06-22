@@ -7,6 +7,7 @@ import { Footer } from "./_components/footer";
 import {
   ArrowLeftArrowRightIcon,
   CardIcon,
+  LockIcon,
   RobotFillIcon,
 } from "./common/icons";
 import { captureReturnHash } from "./lib/presentation";
@@ -152,6 +153,22 @@ export default function Home() {
                   subtitle="Verify your identity to delegate scoped intent to an AI agent to shop on your behalf."
                   icon={
                     <RobotFillIcon className="text-primary-30 h-[24px] w-[24px]" />
+                  }
+                />
+              </div>
+            </div>
+            <div className="mt-6 flex flex-col">
+              <h4 className="mb-4 text-xs font-bold tracking-widest text-white/72 uppercase">
+                For AI agents
+              </h4>
+              <div className="mb-3">
+                <LinkItem
+                  href="/x401"
+                  external
+                  title="x401 Protected Resource"
+                  subtitle="A resource gated by x401. Access it from an AI agent via Proof's MCP server."
+                  icon={
+                    <LockIcon className="text-primary-30 h-[24px] w-[24px]" />
                   }
                 />
               </div>

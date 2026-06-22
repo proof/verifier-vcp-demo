@@ -4612,6 +4612,13 @@
   dependencies:
     "@proof.com/proof-vc-common" "^0.2.0"
 
+"@proof.com/x401-node@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@proof.com/x401-node/-/x401-node-0.1.0.tgz#0983f67dc749d086857d3bd8b144e34731a07679"
+  integrity sha512-VCWRDll0kN1VNXnvR1hK4ejjDOZrKnd980ediWfjKsH0njEC+xu/brTJuovTgpevcNxp1LUPbMPJFGDKZQOtOQ==
+  dependencies:
+    "@owf/identity-common" "^0.2.0"
+
 "@rtsao/scc@^1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@rtsao/scc/-/scc-1.1.0.tgz#927dd2fae9bc3361403ac2c7a00c32ddce9ad7e8"
