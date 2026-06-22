@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { DemoSettingsProvider } from "./_components/demo-settings-context";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -26,7 +27,9 @@ export default function RootLayout({
         <link rel="preload" as="image" href="/rectangle-ticketing.png" />
         <link rel="preload" as="image" href="/sterling-and-union.png" />
       </head>
-      <body>{children}</body>
+      <body className="flex min-h-screen flex-col">
+        <DemoSettingsProvider>{children}</DemoSettingsProvider>
+      </body>
     </html>
   );
 }

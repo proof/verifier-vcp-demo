@@ -34,11 +34,11 @@ export async function POST(request: NextRequest) {
 
     init({
       environment: environment.environment,
-      client_id: environment.clientId[useCase],
-      client_secret: environment.clientSecret[useCase],
-      response_mode: responseMode,
-      callback_uri: callbackURI(originFromRequest(request), responseMode),
-      use_pushed_authorization_request: true,
+      clientId: environment.clientId[useCase],
+      clientSecret: environment.clientSecret[useCase],
+      responseMode,
+      callbackUri: callbackURI(originFromRequest(request), responseMode),
+      usePushedAuthorizationRequest: true,
     });
 
     const url = await getAuthorizationRequestURL({
@@ -46,8 +46,8 @@ export async function POST(request: NextRequest) {
       nonce,
       state: useCase,
       ...(typeof body.loginHint === "string" &&
-        body.loginHint && { login_hint: body.loginHint }),
-      transaction_data: TRANSACTION_DATA[useCase],
+        body.loginHint && { loginHint: body.loginHint }),
+      transactionData: TRANSACTION_DATA[useCase],
     });
 
     return Response.json({ url });

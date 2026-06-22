@@ -4,21 +4,21 @@ default:
 
 # builds the project
 build:
-    npm run build
+    yarn run build
 
 # starts the dev server
 dev:
-    npm run dev
+    yarn run dev
 
 # formats the code
 format:
-    npm run format
+    yarn run format
 
 # installs the dependencies
 alias i := install
 install:
-    npm install
+    yarn install
 
 # checks the code for linting errors
 lint:
-    npm run lint
+    yarn run lint
