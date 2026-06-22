@@ -8,7 +8,10 @@ import { MerchantCase } from "./merchant-case";
 import { WireTransferCase } from "./wire-transfer-case";
 import { AP2Case } from "./ap2-case";
 import { ProtocolPanel } from "../../_components/protocol-panel";
-import { useDemoSettings } from "../../_components/demo-settings-context";
+import {
+  settingsToQuery,
+  useDemoSettings,
+} from "../../_components/demo-settings-context";
 import { type UseCase, NONCE } from "../../lib/util";
 import {
   callbackURI,
@@ -86,7 +89,11 @@ export function Wrapper({ useCase }: { useCase: UseCase }) {
           />
           <button
             type="button"
-            onClick={() => window.location.assign("/")}
+            onClick={() =>
+              window.location.assign(
+                `/?${settingsToQuery({ env, responseMode, authzMethod })}`,
+              )
+            }
             className="group hover:text-primary-30 flex cursor-pointer items-center"
           >
             <ArrowRightIcon className="group-hover:text-primary-30 mr-1 h-[12px] w-[12px] rotate-180" />
