@@ -2,6 +2,7 @@ import crypto from "node:crypto";
 import type { NextRequest } from "next/server";
 import { HEADER, verifier } from "@proof.com/x401-node";
 import { BASIC_SCOPE, verifyToken } from "@/app/lib/x401";
+import { originFromRequest } from "@/app/lib/environments";
 
 export const runtime = "nodejs";
 
@@ -143,7 +144,7 @@ URL: ${MCP_URL}</pre>
 }
 
 export async function GET(request: NextRequest) {
-  const origin = new URL(request.url).origin;
+  const origin = originFromRequest(request);
 
   const presentation = request.headers.get(HEADER.PROOF_PRESENTATION);
   if (presentation && hasValidToken(presentation)) {
