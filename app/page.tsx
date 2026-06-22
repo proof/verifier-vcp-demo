@@ -9,7 +9,6 @@ import {
   CardIcon,
   RobotFillIcon,
 } from "./common/icons";
-import { captureReturnHash } from "./lib/presentation";
 
 const USE_CASE_ROUTES: Record<string, string> = {
   merchant: "/payment",
@@ -24,8 +23,7 @@ export default function Home() {
     const hash = window.location.hash.slice(1);
     const state = new URLSearchParams(hash).get("state");
     if (state && USE_CASE_ROUTES[state]) {
-      captureReturnHash(hash);
-      router.replace(USE_CASE_ROUTES[state]);
+      router.replace(`${USE_CASE_ROUTES[state]}#${hash}`);
     }
   }, [router]);
 

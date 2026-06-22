@@ -3,7 +3,7 @@ import { useId, useState } from "react";
 import "@proof.com/proof-vc-web";
 import { type ResponseMode } from "@proof.com/proof-vc-web";
 import { clsx } from "clsx";
-import { type UseCase } from "@/app/lib/util";
+import { type UseCase, NONCE } from "@/app/lib/util";
 import { TRANSACTION_DATA } from "@/app/data/transaction_data";
 import { type AuthorizationMethod } from "@/app/lib/authorization_methods";
 import { type EnvironmentKey } from "@/app/lib/environments";
@@ -12,7 +12,6 @@ export function AuthForm({
   useCase,
   email,
   onEmailChange,
-  nonce,
   authzMethod,
   environmentKey,
   responseMode,
@@ -20,7 +19,6 @@ export function AuthForm({
   useCase: UseCase;
   email: string;
   onEmailChange: (value: string) => void;
-  nonce?: string;
   authzMethod: AuthorizationMethod;
   environmentKey: EnvironmentKey;
   responseMode: ResponseMode;
@@ -37,7 +35,7 @@ export function AuthForm({
         environmentKey,
         useCase,
         responseMode,
-        nonce,
+        nonce: NONCE,
         loginHint: email,
       }),
     });
@@ -95,19 +93,17 @@ export function AuthForm({
         </div>
       </label>
 
-      {nonce && (
-        <proof-verify-id
-          nonce={nonce}
-          state={useCase}
-          size="medium"
-          login-hint={email}
-          transactionData={transactionData}
-          resolveAuthorizationUrl={
-            authzMethod === "pushed" ? resolveAuthorizationUrl : undefined
-          }
-          style={{ display: "flex", flexDirection: "column", width: "100%" }}
-        />
-      )}
+      <proof-verify-id
+        nonce={NONCE}
+        state={useCase}
+        size="medium"
+        login-hint={email}
+        transactionData={transactionData}
+        resolveAuthorizationUrl={
+          authzMethod === "pushed" ? resolveAuthorizationUrl : undefined
+        }
+        style={{ display: "flex", flexDirection: "column", width: "100%" }}
+      />
 
       <div className="mt-2">
         <p className="text-xs/5 font-light text-gray-400">

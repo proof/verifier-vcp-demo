@@ -1,4 +1,4 @@
-import { rotateNonce, type UseCase } from "./util";
+import { NONCE, type UseCase } from "./util";
 
 export type Presentation = { vpToken: string; result: Record<string, unknown> };
 
@@ -31,32 +31,22 @@ const verifyVPToken = async (
   return json;
 };
 
-let returnHash: string | null = null;
-
-export function captureReturnHash(hash: string): void {
-  returnHash = hash;
-}
-
 export async function consumePresentationFromHash(
   useCase: UseCase,
 ): Promise<Outcome | null> {
-  if (!returnHash) return null;
+  const hash = window.location.hash.slice(1);
+  if (!hash) return null;
 
-  const params = new URLSearchParams(returnHash);
+  const params = new URLSearchParams(hash);
   const state = params.get("state");
   const responseCode = params.get("response_code");
   const vpToken = params.get("vp_token");
 
   if ((!vpToken && !responseCode) || state !== useCase) return null;
 
-  returnHash = null;
-
-  const previousNonce = rotateNonce();
-  if (!previousNonce) return { error: "missing nonce" };
-
   try {
     const token = vpToken ?? (await fetchVPToken(responseCode!));
-    const result = await verifyVPToken(token, previousNonce);
+    const result = await verifyVPToken(token, NONCE);
     return { presentation: { vpToken: token, result } };
   } catch (cause) {
     return { error: cause instanceof Error ? cause.message : String(cause) };

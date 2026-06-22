@@ -14,30 +14,4 @@ export const parseUseCase = (s: string | undefined): UseCase | null => {
   return null;
 };
 
-const NONCE_KEY = "nonce";
-const nonceListeners = new Set<() => void>();
-const notifyNonce = () => nonceListeners.forEach((listener) => listener());
-
-export const subscribeNonce = (listener: () => void): (() => void) => {
-  nonceListeners.add(listener);
-  return () => nonceListeners.delete(listener);
-};
-
-export const nonceSnapshot = (): string | undefined =>
-  localStorage.getItem(NONCE_KEY) ?? undefined;
-
-export const nonceServerSnapshot = (): undefined => undefined;
-
-export const ensureNonce = (): void => {
-  if (!localStorage.getItem(NONCE_KEY)) {
-    localStorage.setItem(NONCE_KEY, crypto.randomUUID());
-    notifyNonce();
-  }
-};
-
-export const rotateNonce = (): string | undefined => {
-  const previous = localStorage.getItem(NONCE_KEY) ?? undefined;
-  localStorage.setItem(NONCE_KEY, crypto.randomUUID());
-  notifyNonce();
-  return previous;
-};
+export const NONCE = "3f947e15-fcf0-4cd7-9030-61fde6632322";
