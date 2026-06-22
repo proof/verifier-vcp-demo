@@ -9,13 +9,7 @@ import { WireTransferCase } from "./wire-transfer-case";
 import { AP2Case } from "./ap2-case";
 import { ProtocolPanel } from "../../_components/protocol-panel";
 import { useDemoSettings } from "../../_components/demo-settings-context";
-import {
-  type UseCase,
-  ensureNonce,
-  nonceServerSnapshot,
-  nonceSnapshot,
-  subscribeNonce,
-} from "../../lib/util";
+import { type UseCase, NONCE } from "../../lib/util";
 import {
   callbackURI,
   ENVIRONMENTS,
@@ -23,7 +17,6 @@ import {
   originSnapshot,
   subscribeOrigin,
 } from "../../lib/environments";
-import Link from "next/link";
 import { ArrowRightIcon } from "../../common/icons";
 import { Footer } from "../../_components/footer";
 import { authorizationRequestPreview } from "../../lib/request_preview";
@@ -39,11 +32,6 @@ export function Wrapper({ useCase }: { useCase: UseCase }) {
   const [error, setError] = useState<string | null>(null);
   const [dismissed, setDismissed] = useState(false);
 
-  const nonce = useSyncExternalStore(
-    subscribeNonce,
-    nonceSnapshot,
-    nonceServerSnapshot,
-  );
   const origin = useSyncExternalStore(
     subscribeOrigin,
     originSnapshot,
@@ -62,10 +50,7 @@ export function Wrapper({ useCase }: { useCase: UseCase }) {
 
   useEffect(() => {
     consumePresentationFromHash(useCase).then((outcome) => {
-      if (!outcome) {
-        ensureNonce();
-        return;
-      }
+      if (!outcome) return;
       if ("presentation" in outcome) {
         setPresentation(outcome.presentation);
       } else {
@@ -79,7 +64,7 @@ export function Wrapper({ useCase }: { useCase: UseCase }) {
     useCase,
     responseMode,
     pushedAuthorization: authzMethod === "pushed",
-    nonce,
+    nonce: NONCE,
     loginHint: email,
     origin,
   });
@@ -99,12 +84,14 @@ export function Wrapper({ useCase }: { useCase: UseCase }) {
             alt=""
             aria-hidden="true"
           />
-          <Link href="/">
-            <div className="group hover:text-primary-30 flex items-center">
-              <ArrowRightIcon className="group-hover:text-primary-30 mr-1 h-[12px] w-[12px] rotate-180" />
-              Back to all demos
-            </div>
-          </Link>
+          <button
+            type="button"
+            onClick={() => window.location.assign("/")}
+            className="group hover:text-primary-30 flex cursor-pointer items-center"
+          >
+            <ArrowRightIcon className="group-hover:text-primary-30 mr-1 h-[12px] w-[12px] rotate-180" />
+            Back to all demos
+          </button>
         </div>
         <div className="mt-4 grid w-full grid-cols-1 items-start gap-4 md:grid-cols-[3fr_5fr]">
           <Block
@@ -148,7 +135,6 @@ export function Wrapper({ useCase }: { useCase: UseCase }) {
                 useCase={useCase}
                 email={email}
                 onEmailChange={setEmail}
-                nonce={nonce}
                 authzMethod={authzMethod}
                 environmentKey={env}
                 responseMode={responseMode}
