@@ -1,8 +1,14 @@
-import crypto from "node:crypto";
 import type { NextRequest } from "next/server";
-import { HEADER, verifier } from "@proof.com/x401-node";
-import { BASIC_SCOPE, verifyToken } from "@/app/lib/x401";
-import { originFromRequest } from "@/app/lib/environments";
+import {
+  DC_API_PROTOCOL,
+  HEADER,
+  verifier,
+  type JsonObject,
+} from "@proof.com/x401-node";
+import { createClient, DCQL_QUERY_BASIC } from "@proof.com/proof-vc-server";
+import { verifyToken } from "@/app/lib/x401";
+import { NONCE } from "@/app/lib/util";
+import { ENVIRONMENTS, originFromRequest } from "@/app/lib/environments";
 
 export const runtime = "nodejs";
 
@@ -136,7 +142,7 @@ URL: ${MCP_URL}</pre>
      <p>Inspect the network HTTP response to locate the "proof-required" header that will contain the
      following x401 requirement:</p>
      <div class="card">
-       <p><span class="status">HTTP 401</span> &nbsp;<span class="badge">${HEADER.PROOF_REQUIRED}</span></p>
+       <p><span class="status">HTTP 401</span> &nbsp;<span class="badge">${HEADER.PROOF_REQUEST}</span></p>
        <pre>${proofRequired}</pre>
      </div>
      ${embeddedData}`,
@@ -146,7 +152,7 @@ URL: ${MCP_URL}</pre>
 export async function GET(request: NextRequest) {
   const origin = originFromRequest(request);
 
-  const presentation = request.headers.get(HEADER.PROOF_PRESENTATION);
+  const presentation = request.headers.get(HEADER.PROOF_RESPONSE);
   if (presentation && hasValidToken(presentation)) {
     return new Response(grantedPage(), {
       status: 200,
@@ -154,17 +160,28 @@ export async function GET(request: NextRequest) {
     });
   }
 
-  const challenge = {
-    value: crypto.randomUUID(),
-    expires_at: new Date(Date.now() + 600_000).toISOString(),
-  };
+  const env = ENVIRONMENTS.next;
+  const dcApiRequest = createClient({
+    environment: env.environment,
+    clientId: env.clientId.merchant,
+    callbackUri: origin,
+  }).dcApiRequest({
+    dcqlQuery: DCQL_QUERY_BASIC,
+    nonce: NONCE,
+  });
 
   const payload = verifier.buildPayload({
-    proof: {
-      challenge,
-      oauth: { token_endpoint: `${origin}/x401/token-exchange` },
-      scope: BASIC_SCOPE,
+    credentialRequirements: {
+      digital: {
+        requests: [
+          {
+            protocol: DC_API_PROTOCOL.UNSIGNED,
+            data: dcApiRequest as unknown as JsonObject,
+          },
+        ],
+      },
     },
+    oauth: { token_endpoint: `${origin}/x401/token-exchange` },
   });
   const proofRequired = verifier.encodePayload(payload);
 
@@ -174,7 +191,7 @@ export async function GET(request: NextRequest) {
       status: 401,
       headers: {
         "Content-Type": "text/html",
-        [HEADER.PROOF_REQUIRED]: proofRequired,
+        [HEADER.PROOF_REQUEST]: proofRequired,
       },
     },
   );

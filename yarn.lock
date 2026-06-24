@@ -4501,11 +4501,6 @@
   resolved "https://registry.yarnpkg.com/@owf/identity-common/-/identity-common-0.3.1.tgz#1e7c0b5d80b648deb4826c244fc2d9ebac932f0c"
   integrity sha512-DLDZtZYMDiV58zpTYVoDc0uFPdZBkmNL31Az5X7sMEttmnU5JvArw3dqPwSMMlT2VfeB0SiPHsuM5dcnqaeNnw==
 
-"@owf/identity-common@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@owf/identity-common/-/identity-common-0.2.0.tgz#8f949ee972a1a22c5eec6a7b1499d9e1f783b339"
-  integrity sha512-liOcJpoUxKkvAOko93VvrpC0w9ft+/D6lalrLoXrgrdd3/q3kGx2IeQ8fcrspw+F3IURfcvdDEH/RwEMx0DKMg==
-
 "@parcel/watcher-android-arm64@2.5.6":
   version "2.5.6"
   resolved "https://registry.yarnpkg.com/@parcel/watcher-android-arm64/-/watcher-android-arm64-2.5.6.tgz#5f32e0dba356f4ac9a11068d2a5c134ca3ba6564"
@@ -4623,12 +4618,12 @@
   dependencies:
     "@proof.com/proof-vc-common" "^0.3.0"
 
-"@proof.com/x401-node@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@proof.com/x401-node/-/x401-node-0.1.0.tgz#0983f67dc749d086857d3bd8b144e34731a07679"
-  integrity sha512-VCWRDll0kN1VNXnvR1hK4ejjDOZrKnd980ediWfjKsH0njEC+xu/brTJuovTgpevcNxp1LUPbMPJFGDKZQOtOQ==
+"@proof.com/x401-node@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@proof.com/x401-node/-/x401-node-0.3.0.tgz#2babcc755caae53c74c9188d330fc18a71ac06fe"
+  integrity sha512-ela9xgJ2wiSa3Hn0fW9oaM7KmRI30kurk3W4jJWp6UomRsvTXvWaB4ltgcX9tAyZ7bkm8Qs1QJViXZ8lR5B/4A==
   dependencies:
-    "@owf/identity-common" "^0.2.0"
+    "@owf/identity-common" "^0.3.0"
 
 "@rtsao/scc@^1.1.0":
   version "1.1.0"
