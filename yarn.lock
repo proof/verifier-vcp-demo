@@ -4488,15 +4488,20 @@
   resolved "https://registry.yarnpkg.com/@opentelemetry/semantic-conventions/-/semantic-conventions-1.41.1.tgz#b04e7151c5913a7a006d4f465479da75efb98a7a"
   integrity sha512-/UhIkaZgPutTFmQ7RnIJGgDXZmtEJ7Dvi86xNTFWcnRxVRNk/aotsqDJYeEvDP+FSMB2SdW+pQzNMcWP0rwuNA==
 
-"@owf/crypto@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@owf/crypto/-/crypto-0.2.0.tgz#70c99a3c3a10e168bb8897818fc50e47747945ef"
-  integrity sha512-pOaaJP900Ki/5zla+H4bresdDkMjmpY0vxSmHraJx3m19V00qZMXsGRJfClGlzwszfXJTciFN0dN2Qb8y1Q6OA==
+"@owf/crypto@^0.3.0":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@owf/crypto/-/crypto-0.3.1.tgz#987284f8175d8479d07166dfbe3587ee707c67d9"
+  integrity sha512-8yLJLZh/D7s588UwwmtOLbfShxv6UwvMYAB9lt1xIqDS51b6Kx7T0Yf9U0qvebibXIZYB+EaPG8uGGG330CX+w==
   dependencies:
     "@noble/hashes" "^2.2.0"
-    "@owf/identity-common" "0.2.0"
+    "@owf/identity-common" "0.3.1"
 
-"@owf/identity-common@0.2.0", "@owf/identity-common@^0.2.0":
+"@owf/identity-common@0.3.1", "@owf/identity-common@^0.3.0":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@owf/identity-common/-/identity-common-0.3.1.tgz#1e7c0b5d80b648deb4826c244fc2d9ebac932f0c"
+  integrity sha512-DLDZtZYMDiV58zpTYVoDc0uFPdZBkmNL31Az5X7sMEttmnU5JvArw3dqPwSMMlT2VfeB0SiPHsuM5dcnqaeNnw==
+
+"@owf/identity-common@^0.2.0":
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/@owf/identity-common/-/identity-common-0.2.0.tgz#8f949ee972a1a22c5eec6a7b1499d9e1f783b339"
   integrity sha512-liOcJpoUxKkvAOko93VvrpC0w9ft+/D6lalrLoXrgrdd3/q3kGx2IeQ8fcrspw+F3IURfcvdDEH/RwEMx0DKMg==
@@ -4595,22 +4600,28 @@
   resolved "https://registry.yarnpkg.com/@pkgjs/parseargs/-/parseargs-0.11.0.tgz#a77ea742fab25775145434eb1d2328cf5013ac33"
   integrity sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==
 
-"@proof.com/proof-vc-common@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@proof.com/proof-vc-common/-/proof-vc-common-0.2.0.tgz#308bba2a5df3051490e50b0f857280dc1ca9b433"
-  integrity sha512-RbmdV8uyQdnqvvffop9F8+mhdurMfpZ7Ob/GP43psh54VqpUAVt4zy7KxgOLRwMNdmX6ba459VvN9tRhNHYadg==
+"@proof.com/proof-vc-common@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@proof.com/proof-vc-common/-/proof-vc-common-0.3.0.tgz#ac291fc1721094805659b07e17f2310cdddc3631"
+  integrity sha512-it2eJzhYk2ZeaxREhb8aift73MOEn0b7nc7tm5Ks6tuZGG9tKmhI34tiGAYpJm031Hs2O4ijHYQ//smBd1yBhQ==
+
+"@proof.com/proof-vc-server@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@proof.com/proof-vc-server/-/proof-vc-server-0.3.0.tgz#8e7cadb59628b5476ce0f71acb95393fd2a2aff7"
+  integrity sha512-uwV2e3tZE6wwoiHuTI6US4Y1hCgxagM1f9Z+tn309KBZqASozGHSEMhH0TR4um3dgxfK0bpupfZUDqT+JpTxrg==
   dependencies:
-    "@owf/crypto" "^0.2.0"
-    "@owf/identity-common" "^0.2.0"
+    "@owf/crypto" "^0.3.0"
+    "@owf/identity-common" "^0.3.0"
+    "@proof.com/proof-vc-common" "^0.3.0"
     "@sd-jwt/core" "^0.19.0"
     "@sd-jwt/sd-jwt-vc" "^0.19.0"
 
-"@proof.com/proof-vc-web@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@proof.com/proof-vc-web/-/proof-vc-web-0.2.0.tgz#9ee2f2d6c24eb792e092c34decb83eddc9588a59"
-  integrity sha512-t7H187SloKRnpCyCWtg6hmrZFQhL5opUzr5oXs/y4HsrAdOiXsR6euftAX+czE20aiYBVx+bq8Oqf4FLV8PBgA==
+"@proof.com/proof-vc-web@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@proof.com/proof-vc-web/-/proof-vc-web-0.3.0.tgz#ed500a7042dd0bf9da1ecc4646cecf675bc3d88b"
+  integrity sha512-i4t67daILHbEkXHnZEu/j8lU2ztYXlQPoobYoUm1cCrnzDrDRuCx1kvv0fjED08inF9EHVuTMBhi3+TupfFDSA==
   dependencies:
-    "@proof.com/proof-vc-common" "^0.2.0"
+    "@proof.com/proof-vc-common" "^0.3.0"
 
 "@proof.com/x401-node@^0.1.0":
   version "0.1.0"

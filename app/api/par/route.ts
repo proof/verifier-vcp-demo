@@ -1,5 +1,5 @@
 import type { NextRequest } from "next/server";
-import { init, getAuthorizationRequestURL } from "@proof.com/proof-vc-common";
+import { createClient } from "@proof.com/proof-vc-server";
 import { type ResponseMode } from "@proof.com/proof-vc-web";
 import {
   ENVIRONMENTS,
@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    init({
+    const client = createClient({
       environment: environment.environment,
       clientId: environment.clientId[useCase],
       clientSecret: environment.clientSecret[useCase],
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
       usePushedAuthorizationRequest: true,
     });
 
-    const url = await getAuthorizationRequestURL({
+    const url = await client.authorizationUrl({
       scope: SCOPE,
       nonce,
       state: useCase,

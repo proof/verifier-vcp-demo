@@ -1,4 +1,4 @@
-import { NONCE, type UseCase } from "./util";
+import { type UseCase } from "./util";
 
 export type Presentation = { vpToken: string; result: Record<string, unknown> };
 
@@ -13,12 +13,11 @@ const fetchVPToken = async (responseCode: string): Promise<string> => {
 
 const verifyVPToken = async (
   token: string,
-  nonce: string,
 ): Promise<Record<string, unknown>> => {
   const response = await fetch("/api/verify_vp_token", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ vp_token: token, nonce }),
+    body: JSON.stringify({ vp_token: token }),
   });
   const json = await response.json();
   if (!response.ok) {
@@ -46,7 +45,7 @@ export async function consumePresentationFromHash(
 
   try {
     const token = vpToken ?? (await fetchVPToken(responseCode!));
-    const result = await verifyVPToken(token, NONCE);
+    const result = await verifyVPToken(token);
     return { presentation: { vpToken: token, result } };
   } catch (cause) {
     return { error: cause instanceof Error ? cause.message : String(cause) };
