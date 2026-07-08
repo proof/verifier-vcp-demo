@@ -12,11 +12,16 @@ export async function POST(request: NextRequest) {
   // Expire the records an hour from now so that refresh works but the records
   // are still cleaned up fairly regularly
   const expiration = Math.floor(Date.now() / 1000 + 3600);
-  await DataClient.models.VpTokens.create({
+  const result = await DataClient.models.VpTokens.create({
     id: nonce,
     token: vpToken!.valueOf().toString(),
     expiresAt: expiration,
   });
+
+  if (result.errors?.length) {
+    console.error("VpTokens create failed:", JSON.stringify(result.errors));
+    return Response.json({ error: "create failed" }, { status: 500 });
+  }
 
   const callback = callbackURI(originFromRequest(request), "fragment");
   return Response.json({
