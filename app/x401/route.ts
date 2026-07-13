@@ -160,7 +160,7 @@ export async function GET(request: NextRequest) {
     });
   }
 
-  const env = ENVIRONMENTS.next;
+  const env = ENVIRONMENTS.fairfax;
   const dcApiRequest = createClient({
     environment: env.environment,
     clientId: env.clientId.merchant,
