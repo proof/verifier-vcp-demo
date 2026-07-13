@@ -1,20 +1,18 @@
 import type { NextRequest } from "next/server";
 import { ACCESS_TOKEN_TYPE, verifier } from "@proof.com/x401-node";
-import { init, verifyVPToken } from "@proof.com/proof-vc-common";
+import { createVerifier } from "@proof.com/proof-vc-server";
 import { BASIC_SCOPE, signToken, TOKEN_TTL_SECONDS } from "@/app/lib/x401";
 
 export const runtime = "nodejs";
 
 export async function POST(request: NextRequest) {
   try {
-    init({ trustRoot: "development" });
     const form = new URLSearchParams(await request.text());
     const { subject_token } = verifier.parseTokenExchange(form);
     const artifact = verifier.decodeVPArtifact(subject_token);
 
-    await verifyVPToken({
+    await createVerifier({ trustRoot: "development" }).verifyVPToken({
       encodedVPToken: artifact.vp_token as string,
-      nonce: artifact.challenge,
     });
 
     const access_token = signToken({ sub: "x401-demo" });

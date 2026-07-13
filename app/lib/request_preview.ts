@@ -1,7 +1,7 @@
 import { type Environment, type ResponseMode } from "@proof.com/proof-vc-web";
 import { ENVIRONMENTS, callbackURI, type EnvironmentKey } from "./environments";
 import { type UseCase } from "./util";
-import { TRANSACTION_DATA } from "../data/transaction_data";
+import { transactionDataPreview } from "../data/transaction_payloads";
 
 // These mirror @proof.com/proof-vc-common's internal authorization-request
 // construction so the demo can show the call the SDK will make on click.
@@ -50,7 +50,9 @@ export const authorizationRequestPreview = ({
     ...(nonce && { nonce }),
     ...(loginHint && { login_hint: loginHint }),
     state: useCase,
-    transaction_data: TRANSACTION_DATA[useCase],
+    ...(pushedAuthorization && {
+      transaction_data: transactionDataPreview(useCase),
+    }),
   };
 
   return { endpoint, params };

@@ -4,9 +4,12 @@ import "@proof.com/proof-vc-web";
 import { type ResponseMode } from "@proof.com/proof-vc-web";
 import { clsx } from "clsx";
 import { type UseCase, NONCE } from "@/app/lib/util";
-import { TRANSACTION_DATA } from "@/app/data/transaction_data";
 import { type AuthorizationMethod } from "@/app/lib/authorization_methods";
-import { type EnvironmentKey } from "@/app/lib/environments";
+import {
+  ENVIRONMENTS,
+  callbackURI,
+  type EnvironmentKey,
+} from "@/app/lib/environments";
 
 export function AuthForm({
   useCase,
@@ -15,6 +18,7 @@ export function AuthForm({
   authzMethod,
   environmentKey,
   responseMode,
+  origin,
 }: {
   useCase: UseCase;
   email: string;
@@ -22,10 +26,11 @@ export function AuthForm({
   authzMethod: AuthorizationMethod;
   environmentKey: EnvironmentKey;
   responseMode: ResponseMode;
+  origin: string;
 }) {
   const emailErrorId = useId();
   const [showEmailError, setShowEmailError] = useState(false);
-  const transactionData = TRANSACTION_DATA[useCase];
+  const { environment, clientId } = ENVIRONMENTS[environmentKey];
 
   const resolveAuthorizationUrl = async () => {
     const response = await fetch("/api/par", {
@@ -94,11 +99,14 @@ export function AuthForm({
       </label>
 
       <proof-verify-id
+        environment={environment}
+        client-id={clientId[useCase]}
+        callback-uri={callbackURI(origin, responseMode)}
+        response-mode={responseMode}
         nonce={NONCE}
         state={useCase}
         size="medium"
         login-hint={email}
-        transactionData={transactionData}
         resolveAuthorizationUrl={
           authzMethod === "pushed" ? resolveAuthorizationUrl : undefined
         }
