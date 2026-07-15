@@ -9,10 +9,22 @@ export async function POST(request: NextRequest) {
   try {
     const form = new URLSearchParams(await request.text());
     const { subject_token } = verifier.parseTokenExchange(form);
-    const artifact = verifier.decodeVPArtifact(subject_token);
+    const artifact = verifier.decodeResultArtifact(subject_token);
+
+    const data = artifact.credential_result?.data;
+    const vpToken =
+      typeof data === "object" && data !== null && !Array.isArray(data)
+        ? data.vp_token
+        : undefined;
+    if (typeof vpToken !== "string") {
+      return Response.json(
+        { error: "presentation response is missing vp_token" },
+        { status: 400 },
+      );
+    }
 
     await createVerifier({ trustRoot: "development" }).verifyVPToken({
-      encodedVPToken: artifact.vp_token as string,
+      encodedVPToken: vpToken,
     });
 
     const access_token = signToken({ sub: "x401-demo" });

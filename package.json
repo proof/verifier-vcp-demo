@@ -14,7 +14,7 @@
     "@proof.com/proof-vc-common": "^0.3.0",
     "@proof.com/proof-vc-server": "^0.3.0",
     "@proof.com/proof-vc-web": "^0.3.0",
-    "@proof.com/x401-node": "^0.1.0",
+    "@proof.com/x401-node": "^0.3.0",
     "aws-amplify": "^6.16.3",
     "clsx": "^2.1.1",
     "next": "^16.2.0",
