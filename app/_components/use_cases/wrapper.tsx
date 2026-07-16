@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect, useSyncExternalStore } from "react";
-import { init } from "@proof.com/proof-vc-web";
 import { Block } from "../../common/block";
 import { MeshGradient } from "../../common/mesh-gradient/mesh-gradient";
 import { AuthForm } from "../../common/auth_form";
@@ -14,8 +13,6 @@ import {
 } from "../../_components/demo-settings-context";
 import { type UseCase, NONCE } from "../../lib/util";
 import {
-  callbackURI,
-  ENVIRONMENTS,
   originServerSnapshot,
   originSnapshot,
   subscribeOrigin,
@@ -40,16 +37,6 @@ export function Wrapper({ useCase }: { useCase: UseCase }) {
     originSnapshot,
     originServerSnapshot,
   );
-
-  useEffect(() => {
-    const { environment, clientId } = ENVIRONMENTS[env];
-    init({
-      environment,
-      clientId: clientId[useCase],
-      responseMode: responseMode,
-      callbackUri: callbackURI(origin, responseMode),
-    });
-  }, [useCase, env, responseMode, authzMethod, origin]);
 
   useEffect(() => {
     consumePresentationFromHash(useCase).then((outcome) => {
@@ -145,6 +132,7 @@ export function Wrapper({ useCase }: { useCase: UseCase }) {
                 authzMethod={authzMethod}
                 environmentKey={env}
                 responseMode={responseMode}
+                origin={origin}
               />
             </div>
           </Block>
