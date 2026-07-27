@@ -9,6 +9,7 @@ import {
   CardIcon,
   LockIcon,
   RobotFillIcon,
+  WalletIcon,
 } from "./common/icons";
 import {
   settingsToQuery,
@@ -37,7 +38,7 @@ export default function Home() {
   return (
     <div className="flex flex-1 flex-col items-center justify-center">
       <MeshGradient />
-      <main className="flex w-full max-w-6xl flex-1 flex-col px-2 pt-6 pb-6 sm:px-6 sm:pt-16">
+      <main className="flex w-full max-w-6xl flex-1 flex-col px-2 pt-4 pb-6 sm:px-6 sm:pt-8">
         <div className="mb-4 px-2 sm:px-0">
           <h1 className="sr-only">Proof</h1>
           <img
@@ -157,6 +158,21 @@ export default function Home() {
                   subtitle="Verify your identity to delegate scoped intent to an AI agent to shop on your behalf."
                   icon={
                     <RobotFillIcon className="text-primary-30 h-[24px] w-[24px]" />
+                  }
+                />
+              </div>
+            </div>
+            <div className="mt-6 flex flex-col">
+              <h4 className="mb-4 text-xs font-bold tracking-widest text-white/72 uppercase">
+                Credentials Issuance
+              </h4>
+              <div className="mb-3">
+                <LinkItem
+                  href={`/issuance?${query}`}
+                  title="Issue a Credential to your Wallet"
+                  subtitle="Try the Digital Credential API + OID4VCI protocol to issue a Proof Digital Credential to your Wallet."
+                  icon={
+                    <WalletIcon className="text-primary-30 h-[24px] w-[24px]" />
                   }
                 />
               </div>

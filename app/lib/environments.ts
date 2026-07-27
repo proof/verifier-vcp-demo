@@ -54,6 +54,17 @@ export const ENVIRONMENTS: Record<
   },
 };
 
+export const API_HOSTS: Record<Environment, string> = {
+  localhost: "https://api.local.dev-notarize.com",
+  next: "https://api.next.proof.com",
+  staging: "https://api.staging.proof.com",
+  sandbox: "https://api.fairfax.proof.com",
+  production: "https://api.proof.com",
+};
+
+export const apiBaseUrl = (environmentKey: EnvironmentKey): string =>
+  API_HOSTS[ENVIRONMENTS[environmentKey].environment];
+
 const FALLBACK_ORIGIN = "https://demo.next.proof.com";
 
 export const callbackURI = (
