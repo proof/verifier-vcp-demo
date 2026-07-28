@@ -120,8 +120,8 @@ function protectedPage(proofRequired: string, embeddedData: string): string {
      <pre>{
   "mcpServers": {
     "x401": {
-      "type": "http",
-      "url": "${MCP_URL}"
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "${MCP_URL}"]
     }
   }
 }</pre>

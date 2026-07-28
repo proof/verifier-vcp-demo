@@ -65,7 +65,7 @@ export function Wrapper({ useCase }: { useCase: UseCase }) {
   return (
     <div className="flex flex-1 flex-col items-center justify-center">
       <MeshGradient />
-      <main className="flex w-full max-w-6xl flex-1 flex-col px-2 pt-6 pb-6 sm:px-6 sm:pt-16">
+      <main className="flex w-full max-w-6xl flex-1 flex-col px-2 pt-4 pb-6 sm:px-6 sm:pt-8">
         <div className="px-2 sm:px-0">
           <h1 className="sr-only">Proof</h1>
           <img
