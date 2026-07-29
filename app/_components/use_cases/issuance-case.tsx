@@ -31,6 +31,32 @@ type DigitalCredentialsCreator = {
 const getDcApiSnapshot = (): DcApiStatus =>
   "DigitalCredential" in window ? "supported" : "unsupported";
 
+/**
+ * Parses an OID4VCI Credential Offer URI and extracts the JSON credential offer.
+ *
+ * Handles two formats:
+ * - Inline: `openid-credential-offer://?credential_offer={...json...}`
+ * - Reference: `openid-credential-offer://?credential_offer_uri=https://...` (fetches the JSON)
+ */
+async function parseCredentialOfferUri(credentialOfferUri: string): Promise<unknown> {
+  const url = new URL(credentialOfferUri);
+  const inlineOffer = url.searchParams.get("credential_offer");
+  if (inlineOffer) {
+    return JSON.parse(inlineOffer);
+  }
+  const offerUri = url.searchParams.get("credential_offer_uri");
+  if (offerUri) {
+    const response = await fetch(offerUri);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch credential offer from ${offerUri}: ${response.status}`);
+    }
+    return response.json();
+  }
+  throw new Error(
+    "Credential offer URI has neither credential_offer nor credential_offer_uri parameter",
+  );
+}
+
 export function IssuanceCase() {
   const { env, responseMode, authzMethod } = useDemoSettings();
 
@@ -52,11 +78,12 @@ export function IssuanceCase() {
     setStatus(null);
     setIssuing(true);
     try {
+      const credentialOfferData = await parseCredentialOfferUri(offerUri);
       const creator = navigator.credentials as unknown as DigitalCredentialsCreator;
       await creator.create({
         digital: {
           requests: [
-            { protocol: OID4VCI_PROTOCOL, data: { credential_offer_uri: offerUrl } },
+            { protocol: OID4VCI_PROTOCOL, data: credentialOfferData },
           ],
         },
       });
