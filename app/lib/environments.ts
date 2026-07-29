@@ -65,6 +65,11 @@ export const API_HOSTS: Record<Environment, string> = {
 export const apiBaseUrl = (environmentKey: EnvironmentKey): string =>
   API_HOSTS[ENVIRONMENTS[environmentKey].environment];
 
+export const CREDENTIAL_OFFER_ID = "00000000-0000-0000-0000-000000000001";
+
+export const credentialOfferUrl = (environmentKey: EnvironmentKey): string =>
+  `${apiBaseUrl(environmentKey)}/verifiable-credentials/v1/issuance/credential-offers/${CREDENTIAL_OFFER_ID}`;
+
 const FALLBACK_ORIGIN = "https://demo.next.proof.com";
 
 export const callbackURI = (

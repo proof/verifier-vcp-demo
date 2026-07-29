@@ -10,9 +10,8 @@ import {
   settingsToQuery,
   useDemoSettings,
 } from "../../_components/demo-settings-context";
-import { apiBaseUrl } from "../../lib/environments";
+import { credentialOfferUrl } from "../../lib/environments";
 
-const OFFER_ID = "00000000-0000-0000-0000-000000000001";
 const OID4VCI_PROTOCOL = "openid4vci-v1";
 const CHROME_FLAG = "chrome://flags/#web-identity-digital-credentials-creation";
 const FLAG_HINT = `The Digital Credentials API for credential issuance is not enabled in this browser. Enable ${CHROME_FLAG} and reload the page.`;
@@ -32,35 +31,28 @@ const getDcApiSnapshot = (): DcApiStatus =>
   "DigitalCredential" in window ? "supported" : "unsupported";
 
 /**
- * Parses an OID4VCI Credential Offer URI and extracts the JSON credential offer.
- *
- * Handles two formats:
- * - Inline: `openid-credential-offer://?credential_offer={...json...}`
- * - Reference: `openid-credential-offer://?credential_offer_uri=https://...` (fetches the JSON)
+ * Fetches the JSON credential offer via the backend proxy route, which
+ * requests it server-side to avoid the browser's cross-origin restriction.
  */
-async function parseCredentialOfferUri(credentialOfferUri: string): Promise<unknown> {
-  const url = new URL(credentialOfferUri);
-  const inlineOffer = url.searchParams.get("credential_offer");
-  if (inlineOffer) {
-    return JSON.parse(inlineOffer);
-  }
-  const offerUri = url.searchParams.get("credential_offer_uri");
-  if (offerUri) {
-    const response = await fetch(offerUri);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch credential offer from ${offerUri}: ${response.status}`);
-    }
-    return response.json();
-  }
-  throw new Error(
-    "Credential offer URI has neither credential_offer nor credential_offer_uri parameter",
+async function fetchCredentialOffer(env: string): Promise<unknown> {
+  const response = await fetch(
+    `/api/credential-offer?environmentKey=${encodeURIComponent(env)}`,
   );
+  const json = await response.json();
+  if (!response.ok) {
+    throw new Error(
+      typeof json?.error === "string"
+        ? json.error
+        : `Failed to fetch credential offer: ${response.status}`,
+    );
+  }
+  return json;
 }
 
 export function IssuanceCase() {
   const { env, responseMode, authzMethod } = useDemoSettings();
 
-  const offerUrl = `${apiBaseUrl(env)}/verifiable-credentials/v1/issuance/credential-offers/${OFFER_ID}`;
+  const offerUrl = credentialOfferUrl(env);
   const offerUri = `openid-credential-offer://?credential_offer_uri=${encodeURIComponent(offerUrl)}`;
 
   const dcApiStatus = useSyncExternalStore<DcApiStatus | null>(
@@ -78,7 +70,7 @@ export function IssuanceCase() {
     setStatus(null);
     setIssuing(true);
     try {
-      const credentialOfferData = await parseCredentialOfferUri(offerUri);
+      const credentialOfferData = await fetchCredentialOffer(env);
       const creator = navigator.credentials as unknown as DigitalCredentialsCreator;
       await creator.create({
         digital: {
