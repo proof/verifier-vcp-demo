@@ -50,7 +50,7 @@ async function fetchCredentialOffer(env: string): Promise<unknown> {
 }
 
 export function IssuanceCase() {
-  const { env, responseMode, authzMethod } = useDemoSettings();
+  const { env, responseMode, authzMethod, signedRequest } = useDemoSettings();
 
   const offerUrl = credentialOfferUrl(env);
   const offerUri = `openid-credential-offer://?credential_offer_uri=${encodeURIComponent(offerUrl)}`;
@@ -113,7 +113,7 @@ export function IssuanceCase() {
             type="button"
             onClick={() =>
               window.location.assign(
-                `/?${settingsToQuery({ env, responseMode, authzMethod })}`,
+                `/?${settingsToQuery({ env, responseMode, authzMethod, signedRequest })}`,
               )
             }
             className="group hover:text-primary-30 flex cursor-pointer items-center"

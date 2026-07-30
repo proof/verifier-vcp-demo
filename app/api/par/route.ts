@@ -9,6 +9,7 @@ import {
 } from "@/app/lib/environments";
 import { TRANSACTION_DATA } from "@/app/data/transaction_data";
 import { parseUseCase } from "@/app/lib/util";
+import { getPrivateJwk } from "@/app/lib/signing_key";
 
 export const runtime = "nodejs";
 
@@ -24,6 +25,8 @@ export async function POST(request: NextRequest) {
     const nonce = body.nonce;
     const responseMode: ResponseMode =
       body.responseMode === "direct_post" ? "direct_post" : "fragment";
+    const usePushedAuthorizationRequest = body.authzMethod !== "query";
+    const useSecuredAuthorizationRequest = body.signedRequest === true;
 
     if (!environment || !useCase || typeof nonce !== "string" || !nonce) {
       return Response.json(
@@ -38,7 +41,11 @@ export async function POST(request: NextRequest) {
       clientSecret: environment.clientSecret[useCase],
       responseMode,
       callbackUri: callbackURI(originFromRequest(request), responseMode),
-      usePushedAuthorizationRequest: true,
+      usePushedAuthorizationRequest,
+      useSecuredAuthorizationRequest,
+      ...(useSecuredAuthorizationRequest && {
+        privateKeyFactory: getPrivateJwk,
+      }),
     });
 
     const url = await client.authorizationUrl({

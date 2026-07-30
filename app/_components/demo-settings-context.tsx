@@ -18,6 +18,8 @@ type DemoSettings = {
   setResponseMode: (mode: ResponseMode) => void;
   authzMethod: AuthorizationMethod;
   setAuthzMethod: (method: AuthorizationMethod) => void;
+  signedRequest: boolean;
+  setSignedRequest: (signed: boolean) => void;
 };
 
 const DemoSettingsContext = createContext<DemoSettings | null>(null);
@@ -26,6 +28,7 @@ const PARAM = {
   env: "env",
   responseMode: "responseMode",
   authzMethod: "authzMethod",
+  signedRequest: "signedRequest",
 } as const;
 
 const getEnvFromReferrer = (referrer: string): EnvironmentKey => {
@@ -59,11 +62,13 @@ export const settingsToQuery = (settings: {
   env: EnvironmentKey;
   responseMode: ResponseMode;
   authzMethod: AuthorizationMethod;
+  signedRequest: boolean;
 }): string => {
   const params = new URLSearchParams();
   params.set(PARAM.env, settings.env);
   params.set(PARAM.responseMode, settings.responseMode);
   params.set(PARAM.authzMethod, settings.authzMethod);
+  params.set(PARAM.signedRequest, String(settings.signedRequest));
   return params.toString();
 };
 
@@ -71,6 +76,7 @@ const syncUrl = (settings: {
   env: EnvironmentKey;
   responseMode: ResponseMode;
   authzMethod: AuthorizationMethod;
+  signedRequest: boolean;
 }): void => {
   if (typeof window === "undefined") return;
   const url = `${window.location.pathname}?${settingsToQuery(settings)}${
@@ -101,18 +107,25 @@ export function DemoSettingsProvider({
       return isAuthorizationMethod(param) ? param : "pushed";
     },
   );
+  const [signedRequest, setSignedRequestState] = useState<boolean>(() => {
+    return searchParams()?.get(PARAM.signedRequest) === "true";
+  });
 
   const setEnv = (value: EnvironmentKey) => {
     setEnvState(value);
-    syncUrl({ env: value, responseMode, authzMethod });
+    syncUrl({ env: value, responseMode, authzMethod, signedRequest });
   };
   const setResponseMode = (value: ResponseMode) => {
     setResponseModeState(value);
-    syncUrl({ env, responseMode: value, authzMethod });
+    syncUrl({ env, responseMode: value, authzMethod, signedRequest });
   };
   const setAuthzMethod = (value: AuthorizationMethod) => {
     setAuthzMethodState(value);
-    syncUrl({ env, responseMode, authzMethod: value });
+    syncUrl({ env, responseMode, authzMethod: value, signedRequest });
+  };
+  const setSignedRequest = (value: boolean) => {
+    setSignedRequestState(value);
+    syncUrl({ env, responseMode, authzMethod, signedRequest: value });
   };
 
   return (
@@ -124,6 +137,8 @@ export function DemoSettingsProvider({
         setResponseMode,
         authzMethod,
         setAuthzMethod,
+        signedRequest,
+        setSignedRequest,
       }}
     >
       {children}

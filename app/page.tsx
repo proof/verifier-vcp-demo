@@ -24,8 +24,13 @@ const USE_CASE_ROUTES: Record<string, string> = {
 
 export default function Home() {
   const router = useRouter();
-  const { env, responseMode, authzMethod } = useDemoSettings();
-  const query = settingsToQuery({ env, responseMode, authzMethod });
+  const { env, responseMode, authzMethod, signedRequest } = useDemoSettings();
+  const query = settingsToQuery({
+    env,
+    responseMode,
+    authzMethod,
+    signedRequest,
+  });
 
   useEffect(() => {
     const hash = window.location.hash.slice(1);

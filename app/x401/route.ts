@@ -9,6 +9,7 @@ import { createClient, DCQL_QUERY_BASIC } from "@proof.com/proof-vc-server";
 import { verifyToken } from "@/app/lib/x401";
 import { NONCE } from "@/app/lib/util";
 import { ENVIRONMENTS, originFromRequest } from "@/app/lib/environments";
+import { getPrivateJwk } from "@/app/lib/signing_key";
 
 export const runtime = "nodejs";
 
@@ -161,11 +162,13 @@ export async function GET(request: NextRequest) {
   }
 
   const env = ENVIRONMENTS.fairfax;
-  const dcApiRequest = createClient({
+  const signedDcApiRequest = await createClient({
     environment: env.environment,
     clientId: env.clientId.merchant,
     callbackUri: origin,
-  }).dcApiRequest({
+    useSecuredAuthorizationRequest: true,
+    privateKeyFactory: getPrivateJwk,
+  }).signedDcApiRequest({
     dcqlQuery: DCQL_QUERY_BASIC,
     nonce: NONCE,
   });
@@ -175,8 +178,8 @@ export async function GET(request: NextRequest) {
       digital: {
         requests: [
           {
-            protocol: DC_API_PROTOCOL.UNSIGNED,
-            data: dcApiRequest as unknown as JsonObject,
+            protocol: DC_API_PROTOCOL.SIGNED,
+            data: signedDcApiRequest as unknown as JsonObject,
           },
         ],
       },
