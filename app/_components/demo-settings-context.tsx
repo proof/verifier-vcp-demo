@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useSyncExternalStore } from "react";
 import {
   ENVIRONMENTS,
   RESPONSE_MODES,
@@ -72,61 +72,83 @@ export const settingsToQuery = (settings: {
   return params.toString();
 };
 
-const syncUrl = (settings: {
-  env: EnvironmentKey;
-  responseMode: ResponseMode;
-  authzMethod: AuthorizationMethod;
-  signedRequest: boolean;
-}): void => {
-  if (typeof window === "undefined") return;
-  const url = `${window.location.pathname}?${settingsToQuery(settings)}${
-    window.location.hash
-  }`;
-  window.history.replaceState(null, "", url);
+const listeners = new Set<() => void>();
+
+const subscribe = (listener: () => void): (() => void) => {
+  listeners.add(listener);
+  return () => {
+    listeners.delete(listener);
+  };
 };
+
+const writeParam = (key: string, value: string): void => {
+  if (typeof window === "undefined") return;
+  const params = new URLSearchParams(window.location.search);
+  params.set(key, value);
+  window.history.replaceState(
+    null,
+    "",
+    `${window.location.pathname}?${params.toString()}${window.location.hash}`,
+  );
+  for (const listener of listeners) {
+    listener();
+  }
+};
+
+const envSnapshot = (): EnvironmentKey => {
+  const param = searchParams()?.get(PARAM.env) ?? null;
+  if (isEnvironmentKey(param)) return param;
+  return typeof document !== "undefined"
+    ? getEnvFromReferrer(document.referrer)
+    : "fairfax";
+};
+
+const responseModeSnapshot = (): ResponseMode => {
+  const param = searchParams()?.get(PARAM.responseMode) ?? null;
+  return isResponseMode(param) ? param : "direct_post";
+};
+
+const authzMethodSnapshot = (): AuthorizationMethod => {
+  const param = searchParams()?.get(PARAM.authzMethod) ?? null;
+  return isAuthorizationMethod(param) ? param : "pushed";
+};
+
+const signedRequestSnapshot = (): boolean =>
+  searchParams()?.get(PARAM.signedRequest) === "true";
 
 export function DemoSettingsProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [env, setEnvState] = useState<EnvironmentKey>(() => {
-    const param = searchParams()?.get(PARAM.env) ?? null;
-    if (isEnvironmentKey(param)) return param;
-    return typeof document !== "undefined"
-      ? getEnvFromReferrer(document.referrer)
-      : "fairfax";
-  });
-  const [responseMode, setResponseModeState] = useState<ResponseMode>(() => {
-    const param = searchParams()?.get(PARAM.responseMode) ?? null;
-    return isResponseMode(param) ? param : "direct_post";
-  });
-  const [authzMethod, setAuthzMethodState] = useState<AuthorizationMethod>(
-    () => {
-      const param = searchParams()?.get(PARAM.authzMethod) ?? null;
-      return isAuthorizationMethod(param) ? param : "pushed";
-    },
+  const env = useSyncExternalStore(
+    subscribe,
+    envSnapshot,
+    (): EnvironmentKey => "fairfax",
   );
-  const [signedRequest, setSignedRequestState] = useState<boolean>(() => {
-    return searchParams()?.get(PARAM.signedRequest) === "true";
-  });
+  const responseMode = useSyncExternalStore(
+    subscribe,
+    responseModeSnapshot,
+    (): ResponseMode => "direct_post",
+  );
+  const authzMethod = useSyncExternalStore(
+    subscribe,
+    authzMethodSnapshot,
+    (): AuthorizationMethod => "pushed",
+  );
+  const signedRequest = useSyncExternalStore(
+    subscribe,
+    signedRequestSnapshot,
+    () => false,
+  );
 
-  const setEnv = (value: EnvironmentKey) => {
-    setEnvState(value);
-    syncUrl({ env: value, responseMode, authzMethod, signedRequest });
-  };
-  const setResponseMode = (value: ResponseMode) => {
-    setResponseModeState(value);
-    syncUrl({ env, responseMode: value, authzMethod, signedRequest });
-  };
-  const setAuthzMethod = (value: AuthorizationMethod) => {
-    setAuthzMethodState(value);
-    syncUrl({ env, responseMode, authzMethod: value, signedRequest });
-  };
-  const setSignedRequest = (value: boolean) => {
-    setSignedRequestState(value);
-    syncUrl({ env, responseMode, authzMethod, signedRequest: value });
-  };
+  const setEnv = (value: EnvironmentKey) => writeParam(PARAM.env, value);
+  const setResponseMode = (value: ResponseMode) =>
+    writeParam(PARAM.responseMode, value);
+  const setAuthzMethod = (value: AuthorizationMethod) =>
+    writeParam(PARAM.authzMethod, value);
+  const setSignedRequest = (value: boolean) =>
+    writeParam(PARAM.signedRequest, String(value));
 
   return (
     <DemoSettingsContext.Provider

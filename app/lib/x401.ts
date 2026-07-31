@@ -15,8 +15,9 @@ function hmac(payload: string): Buffer {
   return crypto.createHmac("sha256", TOKEN_SECRET).update(payload).digest();
 }
 
-interface TokenClaims {
+export interface TokenClaims {
   sub: string;
+  claims?: Record<string, unknown>;
 }
 
 export function signToken(claims: TokenClaims): string {
@@ -57,5 +58,8 @@ export function verifyToken(token: string): TokenClaims {
     throw new Error("access token expired");
   }
 
-  return { sub: body.sub };
+  return {
+    sub: body.sub,
+    ...(body.claims !== undefined && { claims: body.claims }),
+  };
 }

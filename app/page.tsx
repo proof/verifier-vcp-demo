@@ -188,7 +188,7 @@ export default function Home() {
               </h4>
               <div className="mb-3">
                 <LinkItem
-                  href="/x401"
+                  href={`/x401?${query}`}
                   external
                   title="x401 Protected Resource"
                   subtitle="A resource gated by x401. Access it from an AI agent via Proof's MCP server."

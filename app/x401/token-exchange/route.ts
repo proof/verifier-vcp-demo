@@ -23,11 +23,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    await createVerifier({ trustRoot: "development" }).verifyVPToken({
+    const presentation = await createVerifier({
+      trustRoot: "development",
+    }).verifyVPToken({
       encodedVPToken: vpToken,
     });
 
-    const access_token = signToken({ sub: "x401-demo" });
+    const firstCredential = Object.values(presentation)[0]?.[0];
+    const claims = firstCredential?.getClaims();
+
+    const access_token = signToken({
+      sub: "x401-demo",
+      ...(claims !== undefined && { claims }),
+    });
 
     return Response.json({
       access_token,
