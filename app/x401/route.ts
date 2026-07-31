@@ -188,7 +188,7 @@ export async function GET(request: NextRequest) {
   }).signedDcApiRequest({
     scope: "urn:proof:params:scope:verifiable-credentials:basic",
     nonce: NONCE,
-    expectedOrigins: ["http://localhost:3080"],
+    expectedOrigins: ["http://localhost:3080", "https://mcp-sandbox.x401.proof.com"],
     ...(loginHint !== null && { loginHint }),
   });
 
