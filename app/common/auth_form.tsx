@@ -16,6 +16,7 @@ export function AuthForm({
   email,
   onEmailChange,
   authzMethod,
+  signedRequest,
   environmentKey,
   responseMode,
   origin,
@@ -24,6 +25,7 @@ export function AuthForm({
   email: string;
   onEmailChange: (value: string) => void;
   authzMethod: AuthorizationMethod;
+  signedRequest: boolean;
   environmentKey: EnvironmentKey;
   responseMode: ResponseMode;
   origin: string;
@@ -40,6 +42,8 @@ export function AuthForm({
         environmentKey,
         useCase,
         responseMode,
+        authzMethod,
+        signedRequest,
         nonce: NONCE,
         loginHint: email,
       }),
@@ -108,7 +112,9 @@ export function AuthForm({
         size="medium"
         login-hint={email}
         resolveAuthorizationUrl={
-          authzMethod === "pushed" ? resolveAuthorizationUrl : undefined
+          authzMethod === "pushed" || signedRequest
+            ? resolveAuthorizationUrl
+            : undefined
         }
         style={{ display: "flex", flexDirection: "column", width: "100%" }}
       />

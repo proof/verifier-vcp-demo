@@ -9,12 +9,14 @@ export function Dialog({
   onClose,
   dialogRef,
   buttons,
+  maxWidthClassName = "max-w-sm",
 }: {
   title: string;
   children: React.ReactNode;
   onClose: () => void;
   dialogRef: React.RefObject<HTMLDialogElement | null>;
   buttons?: { key: string; label: string; onClick: () => void }[];
+  maxWidthClassName?: string;
 }) {
   const titleId = useId();
 
@@ -23,7 +25,7 @@ export function Dialog({
       ref={dialogRef}
       onCancel={onClose}
       aria-labelledby={titleId}
-      className="bg-elevated m-auto w-full max-w-sm rounded p-6 text-white shadow-md/30 backdrop:bg-blue-200/20"
+      className={`bg-elevated m-auto w-full ${maxWidthClassName} rounded p-6 text-white shadow-md/30 backdrop:bg-blue-200/20`}
     >
       <h2 id={titleId} className="mb-4 text-2xl font-bold">
         {title}
