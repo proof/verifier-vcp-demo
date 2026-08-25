@@ -26,7 +26,7 @@ import {
 } from "../../lib/presentation";
 
 export function Wrapper({ useCase }: { useCase: UseCase }) {
-  const { env, responseMode, authzMethod } = useDemoSettings();
+  const { env, responseMode, authzMethod, signedRequest } = useDemoSettings();
   const [email, setEmail] = useState("");
   const [presentation, setPresentation] = useState<Presentation | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -65,7 +65,7 @@ export function Wrapper({ useCase }: { useCase: UseCase }) {
   return (
     <div className="flex flex-1 flex-col items-center justify-center">
       <MeshGradient />
-      <main className="flex w-full max-w-6xl flex-1 flex-col px-2 pt-6 pb-6 sm:px-6 sm:pt-16">
+      <main className="flex w-full max-w-6xl flex-1 flex-col px-2 pt-4 pb-6 sm:px-6 sm:pt-8">
         <div className="px-2 sm:px-0">
           <h1 className="sr-only">Proof</h1>
           <img
@@ -78,7 +78,7 @@ export function Wrapper({ useCase }: { useCase: UseCase }) {
             type="button"
             onClick={() =>
               window.location.assign(
-                `/?${settingsToQuery({ env, responseMode, authzMethod })}`,
+                `/?${settingsToQuery({ env, responseMode, authzMethod, signedRequest })}`,
               )
             }
             className="group hover:text-primary-30 flex cursor-pointer items-center"
@@ -130,6 +130,7 @@ export function Wrapper({ useCase }: { useCase: UseCase }) {
                 email={email}
                 onEmailChange={setEmail}
                 authzMethod={authzMethod}
+                signedRequest={signedRequest}
                 environmentKey={env}
                 responseMode={responseMode}
                 origin={origin}

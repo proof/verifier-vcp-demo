@@ -9,6 +9,7 @@ import {
   CardIcon,
   LockIcon,
   RobotFillIcon,
+  WalletIcon,
 } from "./common/icons";
 import {
   settingsToQuery,
@@ -23,8 +24,13 @@ const USE_CASE_ROUTES: Record<string, string> = {
 
 export default function Home() {
   const router = useRouter();
-  const { env, responseMode, authzMethod } = useDemoSettings();
-  const query = settingsToQuery({ env, responseMode, authzMethod });
+  const { env, responseMode, authzMethod, signedRequest } = useDemoSettings();
+  const query = settingsToQuery({
+    env,
+    responseMode,
+    authzMethod,
+    signedRequest,
+  });
 
   useEffect(() => {
     const hash = window.location.hash.slice(1);
@@ -37,7 +43,7 @@ export default function Home() {
   return (
     <div className="flex flex-1 flex-col items-center justify-center">
       <MeshGradient />
-      <main className="flex w-full max-w-6xl flex-1 flex-col px-2 pt-6 pb-6 sm:px-6 sm:pt-16">
+      <main className="flex w-full max-w-6xl flex-1 flex-col px-2 pt-4 pb-6 sm:px-6 sm:pt-8">
         <div className="mb-4 px-2 sm:px-0">
           <h1 className="sr-only">Proof</h1>
           <img
@@ -163,11 +169,26 @@ export default function Home() {
             </div>
             <div className="mt-6 flex flex-col">
               <h4 className="mb-4 text-xs font-bold tracking-widest text-white/72 uppercase">
+                Credentials Issuance
+              </h4>
+              <div className="mb-3">
+                <LinkItem
+                  href={`/issuance?${query}`}
+                  title="Issue a Credential to your Wallet"
+                  subtitle="Try the Digital Credential API + OID4VCI protocol to issue a Proof Digital Credential to your Wallet."
+                  icon={
+                    <WalletIcon className="text-primary-30 h-[24px] w-[24px]" />
+                  }
+                />
+              </div>
+            </div>
+            <div className="mt-6 flex flex-col">
+              <h4 className="mb-4 text-xs font-bold tracking-widest text-white/72 uppercase">
                 For AI agents
               </h4>
               <div className="mb-3">
                 <LinkItem
-                  href="/x401"
+                  href={`/x401?${query}`}
                   external
                   title="x401 Protected Resource"
                   subtitle="A resource gated by x401. Access it from an AI agent via Proof's MCP server."

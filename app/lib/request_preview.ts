@@ -1,18 +1,16 @@
-import { type Environment, type ResponseMode } from "@proof.com/proof-vc-web";
-import { ENVIRONMENTS, callbackURI, type EnvironmentKey } from "./environments";
+import { type ResponseMode } from "@proof.com/proof-vc-web";
+import {
+  ENVIRONMENTS,
+  apiBaseUrl,
+  callbackURI,
+  type EnvironmentKey,
+} from "./environments";
 import { type UseCase } from "./util";
 import { transactionDataPreview } from "../data/transaction_payloads";
 
 // These mirror @proof.com/proof-vc-common's internal authorization-request
 // construction so the demo can show the call the SDK will make on click.
 // Display only — the SDK builds the real request.
-const API_HOSTS: Record<Environment, string> = {
-  localhost: "https://api.local.dev-notarize.com",
-  next: "https://api.next.proof.com",
-  staging: "https://api.staging.proof.com",
-  sandbox: "https://api.fairfax.proof.com",
-  production: "https://api.proof.com",
-};
 const PRESENTATION_PATH = "/verifiable-credentials/v1/presentation";
 const SCOPE = "urn:proof:params:scope:verifiable-credentials:basic";
 
@@ -33,8 +31,8 @@ export const authorizationRequestPreview = ({
   loginHint?: string;
   origin: string;
 }): { endpoint: string; params: Record<string, unknown> } => {
-  const { environment, clientId } = ENVIRONMENTS[environmentKey];
-  const endpoint = `${API_HOSTS[environment]}${PRESENTATION_PATH}${
+  const { clientId } = ENVIRONMENTS[environmentKey];
+  const endpoint = `${apiBaseUrl(environmentKey)}${PRESENTATION_PATH}${
     pushedAuthorization ? "/par" : "/authorize"
   }`;
   const callback = callbackURI(origin, responseMode);

@@ -5,22 +5,27 @@ import {
   verifier,
   type JsonObject,
 } from "@proof.com/x401-node";
-import { createClient, DCQL_QUERY_BASIC } from "@proof.com/proof-vc-server";
-import { verifyToken } from "@/app/lib/x401";
+import { createClient } from "@proof.com/proof-vc-server";
+import { verifyToken, type TokenClaims } from "@/app/lib/x401";
 import { NONCE } from "@/app/lib/util";
-import { ENVIRONMENTS, originFromRequest } from "@/app/lib/environments";
+import {
+  ENVIRONMENTS,
+  isEnvironmentKey,
+  originFromRequest,
+  type EnvironmentKey,
+} from "@/app/lib/environments";
+import { getPrivateJwk } from "@/app/lib/signing_key";
 
 export const runtime = "nodejs";
 
 const MCP_URL = "https://mcp-sandbox.x401.proof.com/mcp";
 
-function hasValidToken(headerValue: string): boolean {
+function tokenClaims(headerValue: string): TokenClaims | null {
   try {
     const tokenObject = verifier.decodeTokenObject(headerValue);
-    verifyToken(tokenObject.access_token);
-    return true;
+    return verifyToken(tokenObject.access_token);
   } catch {
-    return false;
+    return null;
   }
 }
 
@@ -92,13 +97,18 @@ function shell(title: string, inner: string): string {
 <style>${STYLES}</style></head><body><main><a class="back" href="/">&larr; Back to all demos</a>${inner}</main></body></html>`;
 }
 
-function grantedPage(): string {
+function grantedPage(claims: TokenClaims): string {
+  const claimsJson = JSON.stringify(claims.claims ?? {}, null, 2)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;");
   return shell(
     "x401 — Access granted",
     `<p class="eyebrow">x401 protected resource</p>
      <h1>Access granted</h1>
      <p>You presented a valid x401 proof. This is the protected content behind the resource.</p>
-     <div class="card"><span class="status">&#10003; Verified presentation accepted</span></div>`,
+     <div class="card"><span class="status">&#10003; Verified presentation accepted</span></div>
+     <h2>Access token claims</h2>
+     <pre>${claimsJson}</pre>`,
   );
 }
 
@@ -120,8 +130,8 @@ function protectedPage(proofRequired: string, embeddedData: string): string {
      <pre>{
   "mcpServers": {
     "x401": {
-      "type": "http",
-      "url": "${MCP_URL}"
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "${MCP_URL}"]
     }
   }
 }</pre>
@@ -153,21 +163,33 @@ export async function GET(request: NextRequest) {
   const origin = originFromRequest(request);
 
   const presentation = request.headers.get(HEADER.PROOF_RESPONSE);
-  if (presentation && hasValidToken(presentation)) {
-    return new Response(grantedPage(), {
-      status: 200,
-      headers: { "Content-Type": "text/html" },
-    });
+  if (presentation) {
+    const claims = tokenClaims(presentation);
+    if (claims) {
+      return new Response(grantedPage(claims), {
+        status: 200,
+        headers: { "Content-Type": "text/html" },
+      });
+    }
   }
 
-  const env = ENVIRONMENTS.fairfax;
-  const dcApiRequest = createClient({
+  const envParam = request.nextUrl.searchParams.get("env");
+  const envKey: EnvironmentKey = isEnvironmentKey(envParam)
+    ? envParam
+    : "fairfax";
+  const env = ENVIRONMENTS[envKey];
+  const loginHint = request.nextUrl.searchParams.get("login_hint");
+  const signedDcApiRequest = await createClient({
     environment: env.environment,
     clientId: env.clientId.merchant,
     callbackUri: origin,
-  }).dcApiRequest({
-    dcqlQuery: DCQL_QUERY_BASIC,
+    useSecuredAuthorizationRequest: true,
+    privateKeyFactory: getPrivateJwk,
+  }).signedDcApiRequest({
+    scope: "urn:proof:params:scope:verifiable-credentials:basic",
     nonce: NONCE,
+    expectedOrigins: ["http://localhost:3080", "https://mcp-sandbox.x401.proof.com"],
+    ...(loginHint !== null && { loginHint }),
   });
 
   const payload = verifier.buildPayload({
@@ -175,8 +197,8 @@ export async function GET(request: NextRequest) {
       digital: {
         requests: [
           {
-            protocol: DC_API_PROTOCOL.UNSIGNED,
-            data: dcApiRequest as unknown as JsonObject,
+            protocol: DC_API_PROTOCOL.SIGNED,
+            data: { request: signedDcApiRequest } as unknown as JsonObject,
           },
         ],
       },

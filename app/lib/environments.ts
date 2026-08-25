@@ -54,6 +54,33 @@ export const ENVIRONMENTS: Record<
   },
 };
 
+export const ENVIRONMENT_KEYS: EnvironmentKey[] = (
+  Object.keys(ENVIRONMENTS) as EnvironmentKey[]
+).filter(
+  (key) => key !== "localhost" || process.env.NODE_ENV === "development",
+);
+
+export const isEnvironmentKey = (
+  value: string | null | undefined,
+): value is EnvironmentKey =>
+  typeof value === "string" && (ENVIRONMENT_KEYS as string[]).includes(value);
+
+export const API_HOSTS: Record<Environment, string> = {
+  localhost: "https://api.local.dev-notarize.com",
+  next: "https://api.next.proof.com",
+  staging: "https://api.staging.proof.com",
+  sandbox: "https://api.fairfax.proof.com",
+  production: "https://api.proof.com",
+};
+
+export const apiBaseUrl = (environmentKey: EnvironmentKey): string =>
+  API_HOSTS[ENVIRONMENTS[environmentKey].environment];
+
+export const CREDENTIAL_OFFER_ID = "00000000-0000-0000-0000-000000000001";
+
+export const credentialOfferUrl = (environmentKey: EnvironmentKey): string =>
+  `${apiBaseUrl(environmentKey)}/verifiable-credentials/v1/issuance/credential-offers/${CREDENTIAL_OFFER_ID}`;
+
 const FALLBACK_ORIGIN = "https://demo.next.proof.com";
 
 export const callbackURI = (

@@ -11,12 +11,13 @@
   },
   "dependencies": {
     "@aws-amplify/adapter-nextjs": "^1.7.2",
-    "@proof.com/proof-vc-common": "^0.3.1",
-    "@proof.com/proof-vc-server": "^0.3.1",
+    "@proof.com/proof-vc-common": "0.4.3",
+    "@proof.com/proof-vc-server": "0.4.3",
     "@proof.com/proof-vc-web": "^0.3.1",
-    "@proof.com/x401-node": "^0.3.0",
+    "@proof.com/x401-node": "0.3.1",
     "aws-amplify": "^6.16.3",
     "clsx": "^2.1.1",
+    "jose": "^6.2.4",
     "next": "^16.2.0",
     "react": "19.2.3",
     "react-dom": "19.2.3"
