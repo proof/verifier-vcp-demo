@@ -1,7 +1,7 @@
 "use client";
 import { createContext, useContext, useSyncExternalStore } from "react";
 import {
-  ENVIRONMENTS,
+  isEnvironmentKey,
   RESPONSE_MODES,
   type EnvironmentKey,
 } from "../lib/environments";
@@ -40,9 +40,6 @@ const getEnvFromReferrer = (referrer: string): EnvironmentKey => {
   }
   return "fairfax";
 };
-
-const isEnvironmentKey = (value: string | null): value is EnvironmentKey =>
-  value !== null && Object.prototype.hasOwnProperty.call(ENVIRONMENTS, value);
 
 const isResponseMode = (value: string | null): value is ResponseMode =>
   value !== null && (RESPONSE_MODES as string[]).includes(value);
