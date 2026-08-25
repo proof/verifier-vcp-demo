@@ -4,8 +4,8 @@ import { type ResponseMode } from "@proof.com/proof-vc-web";
 import {
   ENVIRONMENTS,
   callbackURI,
+  isEnvironmentKey,
   originFromRequest,
-  type EnvironmentKey,
 } from "@/app/lib/environments";
 import { TRANSACTION_DATA } from "@/app/data/transaction_data";
 import { parseUseCase } from "@/app/lib/util";
@@ -18,7 +18,11 @@ const SCOPE = "urn:proof:params:scope:verifiable-credentials:basic" as const;
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const environment = ENVIRONMENTS[body.environmentKey as EnvironmentKey];
+    const environmentKey: string | undefined =
+      typeof body.environmentKey === "string" ? body.environmentKey : undefined;
+    const environment = isEnvironmentKey(environmentKey)
+      ? ENVIRONMENTS[environmentKey]
+      : undefined;
     const useCase = parseUseCase(
       typeof body.useCase === "string" ? body.useCase : undefined,
     );

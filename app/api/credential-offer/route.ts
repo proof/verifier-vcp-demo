@@ -1,18 +1,15 @@
 import type { NextRequest } from "next/server";
 import {
-  ENVIRONMENTS,
   credentialOfferUrl,
-  type EnvironmentKey,
+  isEnvironmentKey,
 } from "@/app/lib/environments";
 
 export const runtime = "nodejs";
 
 export async function GET(request: NextRequest) {
-  const environmentKey = request.nextUrl.searchParams.get(
-    "environmentKey",
-  ) as EnvironmentKey | null;
+  const environmentKey = request.nextUrl.searchParams.get("environmentKey");
 
-  if (!environmentKey || !ENVIRONMENTS[environmentKey]) {
+  if (!isEnvironmentKey(environmentKey)) {
     return Response.json({ error: "invalid environment" }, { status: 400 });
   }
 

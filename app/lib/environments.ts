@@ -54,6 +54,17 @@ export const ENVIRONMENTS: Record<
   },
 };
 
+export const ENVIRONMENT_KEYS: EnvironmentKey[] = (
+  Object.keys(ENVIRONMENTS) as EnvironmentKey[]
+).filter(
+  (key) => key !== "localhost" || process.env.NODE_ENV === "development",
+);
+
+export const isEnvironmentKey = (
+  value: string | null | undefined,
+): value is EnvironmentKey =>
+  typeof value === "string" && (ENVIRONMENT_KEYS as string[]).includes(value);
+
 export const API_HOSTS: Record<Environment, string> = {
   localhost: "https://api.local.dev-notarize.com",
   next: "https://api.next.proof.com",

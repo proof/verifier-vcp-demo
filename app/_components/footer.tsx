@@ -2,6 +2,7 @@
 import {
   RESPONSE_MODES,
   ENVIRONMENTS,
+  ENVIRONMENT_KEYS,
   type EnvironmentKey,
 } from "../lib/environments";
 import { type ResponseMode } from "@proof.com/proof-vc-web";
@@ -57,7 +58,7 @@ export function Footer() {
           onChange={(e) => setEnv(e.target.value as EnvironmentKey)}
           className="cursor-pointer bg-transparent text-xs text-gray-600 focus:outline-none sm:text-sm"
         >
-          {(Object.keys(ENVIRONMENTS) as EnvironmentKey[]).map((key) => (
+          {ENVIRONMENT_KEYS.map((key) => (
             <option key={key} value={key}>
               {ENVIRONMENTS[key].label}
             </option>

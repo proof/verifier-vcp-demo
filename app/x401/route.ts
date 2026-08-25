@@ -10,6 +10,7 @@ import { verifyToken, type TokenClaims } from "@/app/lib/x401";
 import { NONCE } from "@/app/lib/util";
 import {
   ENVIRONMENTS,
+  isEnvironmentKey,
   originFromRequest,
   type EnvironmentKey,
 } from "@/app/lib/environments";
@@ -173,10 +174,9 @@ export async function GET(request: NextRequest) {
   }
 
   const envParam = request.nextUrl.searchParams.get("env");
-  const envKey: EnvironmentKey =
-    envParam && Object.prototype.hasOwnProperty.call(ENVIRONMENTS, envParam)
-      ? (envParam as EnvironmentKey)
-      : "fairfax";
+  const envKey: EnvironmentKey = isEnvironmentKey(envParam)
+    ? envParam
+    : "fairfax";
   const env = ENVIRONMENTS[envKey];
   const loginHint = request.nextUrl.searchParams.get("login_hint");
   const signedDcApiRequest = await createClient({
