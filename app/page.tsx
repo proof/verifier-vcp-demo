@@ -10,6 +10,7 @@ import {
   LockIcon,
   RobotFillIcon,
   WalletIcon,
+  UserCardIcon,
 } from "./common/icons";
 import {
   settingsToQuery,
@@ -20,6 +21,7 @@ const USE_CASE_ROUTES: Record<string, string> = {
   merchant: "/payment",
   wire: "/wire",
   ap2: "/agent-authorization",
+  nationality: "/nationality",
 };
 
 export default function Home() {
@@ -163,6 +165,16 @@ export default function Home() {
                   subtitle="Verify your identity to delegate scoped intent to an AI agent to shop on your behalf."
                   icon={
                     <RobotFillIcon className="text-primary-30 h-[24px] w-[24px]" />
+                  }
+                />
+              </div>
+              <div className="mb-3">
+                <LinkItem
+                  href={`/nationality?${query}`}
+                  title="US Nationality Verification"
+                  subtitle="Access an AI model restricted to US citizens and nationals."
+                  icon={
+                    <UserCardIcon className="text-primary-30 h-[24px] w-[24px]" />
                   }
                 />
               </div>

@@ -4644,27 +4644,27 @@
   resolved "https://registry.yarnpkg.com/@pkgjs/parseargs/-/parseargs-0.11.0.tgz#a77ea742fab25775145434eb1d2328cf5013ac33"
   integrity sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==
 
-"@proof.com/proof-vc-common@0.4.3":
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/@proof.com/proof-vc-common/-/proof-vc-common-0.4.3.tgz#4c3866d6c21c670ccfa52358deea587348cdf281"
-  integrity sha512-QWaplnFBRwez+h6Ws7ugsW08CnrAXkX+7c3eZRNCrqeDRlp170siTZ1PolXfYeafkVf3EJSWIvYmaxyX8hHZdA==
+"@proof.com/proof-vc-common@0.4.4":
+  version "0.4.4"
+  resolved "https://registry.yarnpkg.com/@proof.com/proof-vc-common/-/proof-vc-common-0.4.4.tgz#cc74c9adcc6454ea4969a6c671259846b2eed956"
+  integrity sha512-piqhZlm6LeUUzhBon57arzfRnCgRlmeu5uI7v71jxhX9xS0RiYroRgrilh/TkmR2k5yUkHgWLhoCSKLa2Fczvw==
 
 "@proof.com/proof-vc-common@^0.3.0":
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/@proof.com/proof-vc-common/-/proof-vc-common-0.3.0.tgz#ac291fc1721094805659b07e17f2310cdddc3631"
   integrity sha512-it2eJzhYk2ZeaxREhb8aift73MOEn0b7nc7tm5Ks6tuZGG9tKmhI34tiGAYpJm031Hs2O4ijHYQ//smBd1yBhQ==
 
-"@proof.com/proof-vc-server@0.4.3":
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/@proof.com/proof-vc-server/-/proof-vc-server-0.4.3.tgz#892f013a32ee6297f0c51c7ec00f5cb23f0b0647"
-  integrity sha512-lnrjZF4JhW9unQGw65Pml+isf0Adaut5sJHz/tXGAKO1PgaJNJJotdGyoxXbu8JCVGxm5Yzk12eS7rlIWP5F0w==
+"@proof.com/proof-vc-server@0.4.4":
+  version "0.4.4"
+  resolved "https://registry.yarnpkg.com/@proof.com/proof-vc-server/-/proof-vc-server-0.4.4.tgz#c57d810a8807e0981343f6099e8d84cb6053be4e"
+  integrity sha512-W/R0eLlHPb2/8gsLnOCfFKDFCj6s3QRDeqaGXXfHhpz0ZmeAt9G6DxzLaRvHL2ZmHy1at4xS+DTBBTVNAgPxhA==
   dependencies:
     "@owf/crypto" "^0.3.2"
     "@owf/identity-common" "^0.3.2"
-    "@proof.com/proof-vc-common" "0.4.3"
+    "@proof.com/proof-vc-common" "0.4.4"
     "@sd-jwt/core" "^0.20.0"
     "@sd-jwt/sd-jwt-vc" "^0.20.0"
-    jose "^6.2.4"
+    jose "^6.2.9"
 
 "@proof.com/proof-vc-web@^0.3.1":
   version "0.3.1"
@@ -8564,6 +8564,11 @@ jose@^6.2.4:
   version "6.2.4"
   resolved "https://registry.yarnpkg.com/jose/-/jose-6.2.4.tgz#69de7346761cd04942c659e524d988feb16a4a6e"
   integrity sha512-N8acGzVsQy6M/fjFcxtysNc4Q379TcM5dM/qKkNtsHFji88yANnXTr7BLeP75iPnFwBfQzM/jg2BZ9+HZrHCZA==
+
+jose@^6.2.9:
+  version "6.2.12"
+  resolved "https://registry.yarnpkg.com/jose/-/jose-6.2.12.tgz#65663e146edd010b98ece83f81737d3aa95fd0d7"
+  integrity sha512-9NiFmJEex0sy2Dk58j2UGBSHgUs2ypF9eZSu4L6vjOX3Dp96Sw1F3uL+H+D1sx02jZZdzUT0HgvCy59CuvXcWw==
 
 js-cookie@^3.0.5:
   version "3.0.7"
