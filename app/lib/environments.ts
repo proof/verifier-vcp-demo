@@ -56,13 +56,13 @@ export const ENVIRONMENTS: Record<
       merchant: "cazd76bjn",
       ap2: "carn6kbzd",
       wire: "cagnkmwyn",
-      nationality: "",
+      nationality: "caxnamrjn",
     },
     clientSecret: {
       merchant: "3235c645-7bd1-42b8-81f5-2145312fe6a4",
       ap2: "b0d73eed-2acc-4dff-bb07-b2fc47a0a433",
       wire: "fe21458a-fa1f-47f2-93e0-223e9c25a99d",
-      nationality: "",
+      nationality: "a225a6cd-b475-44e0-9a1a-7d6237904754",
     },
   },
   fairfax: {
@@ -72,13 +72,13 @@ export const ENVIRONMENTS: Record<
       merchant: "caqnb6rwn",
       ap2: "ca6nob9jd",
       wire: "camdrbpxd",
-      nationality: "",
+      nationality: "carnyappn",
     },
     clientSecret: {
       merchant: "0ae23fe0-1212-45a6-8d77-0883b72d7c79",
       ap2: "216d2d97-eafb-4261-af25-5c728b7313bf",
       wire: "fb0a6d35-0123-4033-90ea-e1ad60423f87",
-      nationality: "",
+      nationality: "795b0b0a-7d97-4640-8c69-9ddf610a72c9",
     },
   },
 };
