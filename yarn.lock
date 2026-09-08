@@ -4644,15 +4644,10 @@
   resolved "https://registry.yarnpkg.com/@pkgjs/parseargs/-/parseargs-0.11.0.tgz#a77ea742fab25775145434eb1d2328cf5013ac33"
   integrity sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==
 
-"@proof.com/proof-vc-common@0.4.4":
+"@proof.com/proof-vc-common@0.4.4", "@proof.com/proof-vc-common@^0.4.4":
   version "0.4.4"
   resolved "https://registry.yarnpkg.com/@proof.com/proof-vc-common/-/proof-vc-common-0.4.4.tgz#cc74c9adcc6454ea4969a6c671259846b2eed956"
   integrity sha512-piqhZlm6LeUUzhBon57arzfRnCgRlmeu5uI7v71jxhX9xS0RiYroRgrilh/TkmR2k5yUkHgWLhoCSKLa2Fczvw==
-
-"@proof.com/proof-vc-common@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@proof.com/proof-vc-common/-/proof-vc-common-0.3.0.tgz#ac291fc1721094805659b07e17f2310cdddc3631"
-  integrity sha512-it2eJzhYk2ZeaxREhb8aift73MOEn0b7nc7tm5Ks6tuZGG9tKmhI34tiGAYpJm031Hs2O4ijHYQ//smBd1yBhQ==
 
 "@proof.com/proof-vc-server@0.4.4":
   version "0.4.4"
@@ -4666,12 +4661,12 @@
     "@sd-jwt/sd-jwt-vc" "^0.20.0"
     jose "^6.2.9"
 
-"@proof.com/proof-vc-web@^0.3.1":
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/@proof.com/proof-vc-web/-/proof-vc-web-0.3.1.tgz#5ea37af7cb0512dd1f405ef8e9fe563f4ab19342"
-  integrity sha512-lq4/5EXGWGkl70foiA1ZSTIq3l1eH7Z3WDP+s/hCyLDLkB8nTI+j5WYeaWUwATWN/8+tDU0jT8+HPNUmEO6Atg==
+"@proof.com/proof-vc-web@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@proof.com/proof-vc-web/-/proof-vc-web-0.4.0.tgz#18815b04a9f73d653d3f3a9c8112dec00c89b5d5"
+  integrity sha512-qo9cPXmbTPpvspSpoek8s/sXg62C1GdMG/aCokEavz0ByYtTayvr6NRbb6dh6wn+XdGmVojzexeAXWgMht1AWw==
   dependencies:
-    "@proof.com/proof-vc-common" "^0.3.0"
+    "@proof.com/proof-vc-common" "^0.4.4"
 
 "@proof.com/x401-node@0.3.1":
   version "0.3.1"
