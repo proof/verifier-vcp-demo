@@ -24,13 +24,13 @@ export const ENVIRONMENTS: Record<
       merchant: "cay6ej55p",
       ap2: "cay6ej55p",
       wire: "cay6ej55p",
-      nationality: "",
+      nationality: "cay6ej55p",
     },
     clientSecret: {
       merchant: "779b9042-24be-4af6-998a-e697e1d1af2c",
       ap2: "779b9042-24be-4af6-998a-e697e1d1af2c",
       wire: "779b9042-24be-4af6-998a-e697e1d1af2c",
-      nationality: "",
+      nationality: "779b9042-24be-4af6-998a-e697e1d1af2c",
     },
   },
   next: {
