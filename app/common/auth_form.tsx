@@ -10,6 +10,7 @@ import {
   callbackURI,
   type EnvironmentKey,
 } from "@/app/lib/environments";
+import { NATIONALITY_SCOPE } from "@/app/lib/scopes";
 
 export function AuthForm({
   useCase,
@@ -117,6 +118,7 @@ export function AuthForm({
             : undefined
         }
         style={{ display: "flex", flexDirection: "column", width: "100%" }}
+        {...(useCase === "nationality" && { scope: NATIONALITY_SCOPE })}
       />
 
       <div className="mt-2">

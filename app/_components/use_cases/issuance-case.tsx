@@ -71,12 +71,11 @@ export function IssuanceCase() {
     setIssuing(true);
     try {
       const credentialOfferData = await fetchCredentialOffer(env);
-      const creator = navigator.credentials as unknown as DigitalCredentialsCreator;
+      const creator =
+        navigator.credentials as unknown as DigitalCredentialsCreator;
       await creator.create({
         digital: {
-          requests: [
-            { protocol: OID4VCI_PROTOCOL, data: credentialOfferData },
-          ],
+          requests: [{ protocol: OID4VCI_PROTOCOL, data: credentialOfferData }],
         },
       });
       setStatus({
@@ -85,9 +84,8 @@ export function IssuanceCase() {
       });
     } catch (error) {
       const raw = error instanceof Error ? error.message : "Issuance failed.";
-      const flagOff = /password|federated|publickey|not\s*supported|digital/i.test(
-        raw,
-      );
+      const flagOff =
+        /password|federated|publickey|not\s*supported|digital/i.test(raw);
       setStatus({
         kind: "error",
         message: flagOff ? FLAG_HINT : raw,
@@ -150,7 +148,9 @@ export function IssuanceCase() {
               <li className="flex items-start">
                 <div className="ring-primary/25 mt-[7px] mr-3 h-[8px] w-[8px] flex-none rounded-full bg-[var(--primary-50)] ring-4" />
                 <div className="flex flex-col">
-                  <span>Enable the credential-issuance flag, then relaunch:</span>
+                  <span>
+                    Enable the credential-issuance flag, then relaunch:
+                  </span>
                   <Code label="Chromium flag" wrap>
                     {CHROME_FLAG}
                   </Code>

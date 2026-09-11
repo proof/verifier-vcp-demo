@@ -10,10 +10,9 @@ import {
 import { TRANSACTION_DATA } from "@/app/data/transaction_data";
 import { parseUseCase } from "@/app/lib/util";
 import { getPrivateJwk } from "@/app/lib/signing_key";
+import { BASIC_SCOPE, NATIONALITY_SCOPE } from "@/app/lib/scopes";
 
 export const runtime = "nodejs";
-
-const SCOPE = "urn:proof:params:scope:verifiable-credentials:basic" as const;
 
 export async function POST(request: NextRequest) {
   try {
@@ -26,6 +25,7 @@ export async function POST(request: NextRequest) {
     const useCase = parseUseCase(
       typeof body.useCase === "string" ? body.useCase : undefined,
     );
+    const isNationality = useCase === "nationality";
     const nonce = body.nonce;
     const responseMode: ResponseMode =
       body.responseMode === "direct_post" ? "direct_post" : "fragment";
@@ -52,17 +52,21 @@ export async function POST(request: NextRequest) {
       }),
     });
 
+    const scope = isNationality ? NATIONALITY_SCOPE : BASIC_SCOPE;
     const url = await client.authorizationUrl({
-      scope: SCOPE,
+      scope,
       nonce,
       state: useCase,
       ...(typeof body.loginHint === "string" &&
         body.loginHint && { loginHint: body.loginHint }),
-      transactionData: TRANSACTION_DATA[useCase],
+      ...(TRANSACTION_DATA[useCase] && {
+        transactionData: TRANSACTION_DATA[useCase],
+      }),
     });
 
     return Response.json({ url });
   } catch (error) {
+    console.error(error);
     return Response.json({ error: String(error) }, { status: 502 });
   }
 }

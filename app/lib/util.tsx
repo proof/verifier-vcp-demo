@@ -1,6 +1,6 @@
-export type UseCase = "merchant" | "wire" | "ap2";
+export type UseCase = "merchant" | "wire" | "ap2" | "nationality";
 
-const USE_CASES: UseCase[] = ["merchant", "wire", "ap2"];
+const USE_CASES: UseCase[] = ["merchant", "wire", "ap2", "nationality"];
 
 export const parseUseCase = (s: string | undefined): UseCase | null => {
   if (s === undefined) {

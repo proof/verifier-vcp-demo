@@ -2,7 +2,12 @@ import { type Environment, type ResponseMode } from "@proof.com/proof-vc-web";
 
 export const RESPONSE_MODES: Array<ResponseMode> = ["fragment", "direct_post"];
 export type EnvironmentKey = "localhost" | "next" | "staging" | "fairfax";
-type UseCaseMap = { merchant: string; ap2: string; wire: string };
+type UseCaseMap = {
+  merchant: string;
+  ap2: string;
+  wire: string;
+  nationality: string;
+};
 export const ENVIRONMENTS: Record<
   EnvironmentKey,
   {
@@ -15,41 +20,65 @@ export const ENVIRONMENTS: Record<
   localhost: {
     label: "localhost",
     environment: "localhost",
-    clientId: { merchant: "cay6ej55p", ap2: "cay6ej55p", wire: "cay6ej55p" },
+    clientId: {
+      merchant: "cay6ej55p",
+      ap2: "cay6ej55p",
+      wire: "cay6ej55p",
+      nationality: "cay6ej55p",
+    },
     clientSecret: {
       merchant: "779b9042-24be-4af6-998a-e697e1d1af2c",
       ap2: "779b9042-24be-4af6-998a-e697e1d1af2c",
       wire: "779b9042-24be-4af6-998a-e697e1d1af2c",
+      nationality: "779b9042-24be-4af6-998a-e697e1d1af2c",
     },
   },
   next: {
     label: "Next",
     environment: "next",
-    clientId: { merchant: "caxdw5a7d", ap2: "cabd569jn", wire: "ca3ng8pbd" },
+    clientId: {
+      merchant: "caxdw5a7d",
+      ap2: "cabd569jn",
+      wire: "ca3ng8pbd",
+      nationality: "cad3qbm4d",
+    },
     clientSecret: {
       merchant: "5cd353a6-b880-49f3-b2c3-59aa800351b2",
       ap2: "f2d592a4-792d-425c-b4e6-a22706b39364",
       wire: "23860ce8-a862-4ad9-87c2-95c81d5f2a9e",
+      nationality: "5ade5bbf-a220-4eaf-bf05-632ad203b3f4",
     },
   },
   staging: {
     label: "Staging",
     environment: "staging",
-    clientId: { merchant: "cazd76bjn", ap2: "carn6kbzd", wire: "cagnkmwyn" },
+    clientId: {
+      merchant: "cazd76bjn",
+      ap2: "carn6kbzd",
+      wire: "cagnkmwyn",
+      nationality: "caxnamrjn",
+    },
     clientSecret: {
       merchant: "3235c645-7bd1-42b8-81f5-2145312fe6a4",
       ap2: "b0d73eed-2acc-4dff-bb07-b2fc47a0a433",
       wire: "fe21458a-fa1f-47f2-93e0-223e9c25a99d",
+      nationality: "a225a6cd-b475-44e0-9a1a-7d6237904754",
     },
   },
   fairfax: {
     label: "Fairfax",
     environment: "sandbox",
-    clientId: { merchant: "caqnb6rwn", ap2: "ca6nob9jd", wire: "camdrbpxd" },
+    clientId: {
+      merchant: "caqnb6rwn",
+      ap2: "ca6nob9jd",
+      wire: "camdrbpxd",
+      nationality: "carnyappn",
+    },
     clientSecret: {
       merchant: "0ae23fe0-1212-45a6-8d77-0883b72d7c79",
       ap2: "216d2d97-eafb-4261-af25-5c728b7313bf",
       wire: "fb0a6d35-0123-4033-90ea-e1ad60423f87",
+      nationality: "795b0b0a-7d97-4640-8c69-9ddf610a72c9",
     },
   },
 };

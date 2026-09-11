@@ -1,8 +1,5 @@
 import type { NextRequest } from "next/server";
-import {
-  credentialOfferUrl,
-  isEnvironmentKey,
-} from "@/app/lib/environments";
+import { credentialOfferUrl, isEnvironmentKey } from "@/app/lib/environments";
 
 export const runtime = "nodejs";
 
