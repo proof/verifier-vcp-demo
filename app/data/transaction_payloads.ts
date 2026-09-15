@@ -10,6 +10,7 @@ type Payloads = {
   merchant: PaymentItemizedPayload;
   wire: WireInstructionsPayload;
   ap2: PaymentMandatePayload;
+  nationality: null;
 };
 
 export const TRANSACTION_PAYLOADS: Payloads = {
@@ -55,12 +56,14 @@ export const TRANSACTION_PAYLOADS: Payloads = {
     amount: 500,
     currency: "USD",
   },
+  nationality: null,
 };
 
 const TX_DATA_TYPE: Record<UseCase, string> = {
   merchant: "urn:proof:params:vc:transaction-data:payment-itemized:v1",
   wire: "urn:proof:params:vc:transaction-data:wire-instructions:v1",
   ap2: "urn:proof:params:vc:transaction-data:payment-mandate:v1",
+  nationality: "",
 };
 
 export const transactionDataPreview = (useCase: UseCase) => ({

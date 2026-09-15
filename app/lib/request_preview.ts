@@ -7,12 +7,12 @@ import {
 } from "./environments";
 import { type UseCase } from "./util";
 import { transactionDataPreview } from "../data/transaction_payloads";
+import { BASIC_SCOPE, NATIONALITY_SCOPE } from "./scopes";
 
 // These mirror @proof.com/proof-vc-common's internal authorization-request
 // construction so the demo can show the call the SDK will make on click.
 // Display only — the SDK builds the real request.
 const PRESENTATION_PATH = "/verifiable-credentials/v1/presentation";
-const SCOPE = "urn:proof:params:scope:verifiable-credentials:basic";
 
 export const authorizationRequestPreview = ({
   environmentKey,
@@ -31,12 +31,13 @@ export const authorizationRequestPreview = ({
   loginHint?: string;
   origin: string;
 }): { endpoint: string; params: Record<string, unknown> } => {
+  const isNationality = useCase === "nationality";
   const { clientId } = ENVIRONMENTS[environmentKey];
   const endpoint = `${apiBaseUrl(environmentKey)}${PRESENTATION_PATH}${
     pushedAuthorization ? "/par" : "/authorize"
   }`;
   const callback = callbackURI(origin, responseMode);
-
+  const scope = isNationality ? NATIONALITY_SCOPE : BASIC_SCOPE;
   // transaction_data is shown decoded for readability; the real request sends
   // its base64url encoding.
   const params: Record<string, unknown> = {
@@ -44,12 +45,12 @@ export const authorizationRequestPreview = ({
     client_id: clientId[useCase],
     response_mode: responseMode,
     [responseMode === "fragment" ? "redirect_uri" : "response_uri"]: callback,
-    scope: SCOPE,
+    scope,
     ...(nonce && { nonce }),
     ...(loginHint && { login_hint: loginHint }),
     state: useCase,
     ...(pushedAuthorization && {
-      transaction_data: transactionDataPreview(useCase),
+      transaction_data: isNationality ? null : transactionDataPreview(useCase),
     }),
   };
 

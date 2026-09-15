@@ -26,6 +26,7 @@ export default function RootLayout({
         <link rel="preload" as="image" href="/orion.png" />
         <link rel="preload" as="image" href="/rectangle-ticketing.png" />
         <link rel="preload" as="image" href="/sterling-and-union.png" />
+        <link rel="preload" as="image" href="/aetheon.png" />
       </head>
       <body className="flex min-h-screen flex-col">
         <DemoSettingsProvider>{children}</DemoSettingsProvider>

@@ -5,6 +5,7 @@ import { MeshGradient } from "../../common/mesh-gradient/mesh-gradient";
 import { AuthForm } from "../../common/auth_form";
 import { MerchantCase } from "./merchant-case";
 import { WireTransferCase } from "./wire-transfer-case";
+import { NationalityCase } from "./nationality-case";
 import { AP2Case } from "./ap2-case";
 import { ProtocolPanel } from "../../_components/protocol-panel";
 import {
@@ -92,9 +93,11 @@ export function Wrapper({ useCase }: { useCase: UseCase }) {
             title={
               useCase === "merchant"
                 ? "Verified Payment"
-                : useCase === "wire"
-                  ? "Wire Transfer"
-                  : "Agent Authorization"
+                : useCase === "nationality"
+                  ? "Verify your US nationality"
+                  : useCase === "wire"
+                    ? "Wire Transfer"
+                    : "Agent Authorization"
             }
           >
             <div>
@@ -104,6 +107,13 @@ export function Wrapper({ useCase }: { useCase: UseCase }) {
                   onDismiss={handleDismissSuccess}
                 />
               )}
+              {useCase === "nationality" && (
+                <NationalityCase
+                  showSuccess={showSuccess}
+                  onDismiss={handleDismissSuccess}
+                />
+              )}
+
               {useCase === "wire" && (
                 <WireTransferCase
                   showSuccess={showSuccess}
@@ -121,9 +131,11 @@ export function Wrapper({ useCase }: { useCase: UseCase }) {
               <h2 className="my-4 border-t-2 border-gray-300 pt-2 text-lg font-bold">
                 {useCase === "wire"
                   ? "Authorize your wire transfer"
-                  : useCase === "ap2"
-                    ? "Authorize the agent to shop"
-                    : "Authorize your purchase"}
+                  : useCase === "nationality"
+                    ? "Unlock Gable 5 with Proof"
+                    : useCase === "ap2"
+                      ? "Authorize the agent to shop"
+                      : "Authorize your purchase"}
               </h2>
               <AuthForm
                 useCase={useCase}

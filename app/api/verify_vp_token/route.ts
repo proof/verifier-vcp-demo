@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     for (const [credentialId, credentials] of Object.entries(presentation)) {
       result[credentialId] = credentials.map((credential) => {
         if (credential.getNonce() !== NONCE) {
-          throw "invalid nonce"
+          throw "invalid nonce";
         }
         const sdJwt = credential.getSDJWT();
         return {
