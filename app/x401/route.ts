@@ -190,7 +190,10 @@ export async function GET(request: NextRequest) {
     nonce: NONCE,
     expectedOrigins: [
       "http://localhost:3080",
-      "https://mcp-sandbox.x401.proof.com",
+      "https://depletion-ruse-creasing.ngrok-free.dev",
+      "https://mcp.next.proof.com",
+      "https://mcp.staging.proof.com",
+      "https://mcp.fairfax.proof.com"
     ],
     ...(loginHint !== null && { loginHint }),
   });
