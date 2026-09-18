@@ -5,7 +5,7 @@ node_modules
 out
 next-env.d.ts
 tsconfig.tsbuildinfo
-
+CLAUDE.local.md
 # Nix
 .devenv/
 .direnv/
