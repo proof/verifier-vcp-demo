@@ -18,7 +18,12 @@ import { getPrivateJwk } from "@/app/lib/signing_key";
 
 export const runtime = "nodejs";
 
-const MCP_URL = "https://mcp-sandbox.x401.proof.com/mcp";
+const MCP_URLS: Record<EnvironmentKey, string> = {
+  localhost: "http://localhost:3080/mcp",
+  next: "https://mcp.next.proof.com/mcp",
+  staging: "https://mcp.staging.proof.com/mcp",
+  fairfax: "https://mcp.fairfax.proof.com/mcp",
+};
 
 function tokenClaims(headerValue: string): TokenClaims | null {
   try {
@@ -112,7 +117,11 @@ function grantedPage(claims: TokenClaims): string {
   );
 }
 
-function protectedPage(proofRequired: string, embeddedData: string): string {
+function protectedPage(
+  proofRequired: string,
+  embeddedData: string,
+  mcpUrl: string,
+): string {
   return shell(
     "x401 — Proof required",
     `<p class="eyebrow">For AI agents &middot; x401 protected resource</p>
@@ -124,14 +133,14 @@ function protectedPage(proofRequired: string, embeddedData: string): string {
      <p>Add Proof's x401 MCP server, then ask your agent to fetch this URL.</p>
 
      <p><strong>Claude Code</strong></p>
-     <pre>claude mcp add --transport http x401 ${MCP_URL}</pre>
+     <pre>claude mcp add --transport http x401 ${mcpUrl}</pre>
 
      <p><strong>Claude Desktop</strong> (<code>claude_desktop_config.json</code>)</p>
      <pre>{
   "mcpServers": {
     "x401": {
       "command": "npx",
-      "args": ["-y", "mcp-remote", "${MCP_URL}"]
+      "args": ["-y", "mcp-remote", "${mcpUrl}"]
     }
   }
 }</pre>
@@ -139,7 +148,7 @@ function protectedPage(proofRequired: string, embeddedData: string): string {
      <p><strong>ChatGPT</strong> (Settings &rarr; Connectors &rarr; Add custom connector)</p>
      <pre>Name: x401
 Transport: HTTP / Streamable HTTP
-URL: ${MCP_URL}</pre>
+URL: ${mcpUrl}</pre>
 
      <h2>Then</h2>
      <ol>
@@ -214,7 +223,11 @@ export async function GET(request: NextRequest) {
   const proofRequired = verifier.encodePayload(payload);
 
   return new Response(
-    protectedPage(proofRequired, verifier.embedHtmlData(payload)),
+    protectedPage(
+      proofRequired,
+      verifier.embedHtmlData(payload),
+      MCP_URLS[envKey],
+    ),
     {
       status: 401,
       headers: {
