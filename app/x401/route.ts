@@ -133,12 +133,12 @@ function protectedPage(
      <p>Add Proof's x401 MCP server, then ask your agent to fetch this URL.</p>
 
      <p><strong>Claude Code</strong></p>
-     <pre>claude mcp add --transport http x401 ${mcpUrl}</pre>
+     <pre>claude mcp add --transport http proof ${mcpUrl}</pre>
 
      <p><strong>Claude Desktop</strong> (<code>claude_desktop_config.json</code>)</p>
      <pre>{
   "mcpServers": {
-    "x401": {
+    "proof": {
       "command": "npx",
       "args": ["-y", "mcp-remote", "${mcpUrl}"]
     }
@@ -146,7 +146,7 @@ function protectedPage(
 }</pre>
 
      <p><strong>ChatGPT</strong> (Settings &rarr; Connectors &rarr; Add custom connector)</p>
-     <pre>Name: x401
+     <pre>Name: proof
 Transport: HTTP / Streamable HTTP
 URL: ${mcpUrl}</pre>
 
