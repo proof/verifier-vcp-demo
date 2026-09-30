@@ -1,15 +1,24 @@
 import type { NextRequest } from "next/server";
 import { createVerifier } from "@proof.com/proof-vc-server";
 import { NONCE } from "@/app/lib/util";
+import { ENVIRONMENTS, isEnvironmentKey } from "@/app/lib/environments";
 
 export async function POST(request: NextRequest) {
-  const verifier = createVerifier({ trustRoot: "development" });
-
-  const { vp_token: vpToken } = await request.json();
+  const { vp_token: vpToken, environmentKey } = await request.json();
 
   if (typeof vpToken !== "string" || vpToken.length === 0) {
     return Response.json({ error: "vp_token is required" }, { status: 400 });
   }
+  if (!isEnvironmentKey(environmentKey)) {
+    return Response.json(
+      { error: "environmentKey is required" },
+      { status: 400 },
+    );
+  }
+
+  const verifier = createVerifier({
+    environment: ENVIRONMENTS[environmentKey].environment,
+  });
 
   try {
     const presentation = await verifier.verifyVPToken({

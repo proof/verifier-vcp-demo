@@ -40,7 +40,7 @@ export function Wrapper({ useCase }: { useCase: UseCase }) {
   );
 
   useEffect(() => {
-    consumePresentationFromHash(useCase).then((outcome) => {
+    consumePresentationFromHash(useCase, env).then((outcome) => {
       if (!outcome) return;
       if ("presentation" in outcome) {
         setPresentation(outcome.presentation);
@@ -48,7 +48,7 @@ export function Wrapper({ useCase }: { useCase: UseCase }) {
         setError(outcome.error);
       }
     });
-  }, [useCase]);
+  }, [useCase, env]);
 
   const { endpoint, params: requestParams } = authorizationRequestPreview({
     environmentKey: env,

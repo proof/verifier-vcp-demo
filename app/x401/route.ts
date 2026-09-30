@@ -1,239 +1,119 @@
+import { randomUUID } from "node:crypto";
 import type { NextRequest } from "next/server";
 import {
-  DC_API_PROTOCOL,
+  verifier as x401,
   HEADER,
-  verifier,
-  type JsonObject,
+  DC_API_PROTOCOL,
 } from "@proof.com/x401-node";
-import { createClient } from "@proof.com/proof-vc-server";
-import { verifyToken, type TokenClaims } from "@/app/lib/x401";
-import { NONCE } from "@/app/lib/util";
-import {
-  ENVIRONMENTS,
-  isEnvironmentKey,
-  originFromRequest,
-  type EnvironmentKey,
-} from "@/app/lib/environments";
+import { createClient, createVerifier } from "@proof.com/proof-vc-server";
 import { getPrivateJwk } from "@/app/lib/signing_key";
+import { MCP_URLS, grantedPage, protectedPage } from "@/app/x401/page_html";
+import {
+  X401_SCOPE,
+  agentsTrustListUrl,
+  x401Context,
+  type X401Context,
+} from "@/app/lib/x401";
 
 export const runtime = "nodejs";
 
-const MCP_URLS: Record<EnvironmentKey, string> = {
-  localhost: "http://localhost:3080/mcp",
-  next: "https://mcp.next.proof.com/mcp",
-  staging: "https://mcp.staging.proof.com/mcp",
-  fairfax: "https://mcp.fairfax.proof.com/mcp",
-};
+const HTML_HEADERS = { "content-type": "text/html; charset=utf-8" };
 
-function tokenClaims(headerValue: string): TokenClaims | null {
+async function proofRequired(context: X401Context): Promise<Response> {
+  const proofClient = createClient({
+    environment: context.environment,
+    clientId: context.clientId,
+    useSecuredAuthorizationRequest: true,
+    privateKeyFactory: getPrivateJwk,
+  });
+  const request = await proofClient.signedDcApiRequest({
+    scope: X401_SCOPE,
+    nonce: randomUUID(),
+    expectedOrigins: [agentsTrustListUrl(context.environment)],
+  });
+  const payload = x401.buildPayload({
+    credentialRequirements: {
+      digital: {
+        requests: [{ protocol: DC_API_PROTOCOL.SIGNED, data: { request } }],
+      },
+    },
+  });
+  const encoded = x401.encodePayload(payload);
+  return new Response(
+    protectedPage({
+      proofRequestHeaderName: HEADER.PROOF_REQUEST,
+      proofRequired: encoded,
+      mcpUrl: MCP_URLS[context.environmentKey],
+    }),
+    {
+      status: 401,
+      headers: { ...HTML_HEADERS, [HEADER.PROOF_REQUEST]: encoded },
+    },
+  );
+}
+
+function errorResponse(status: number, message: string): Response {
+  return new Response(message, {
+    status,
+    headers: { "content-type": "text/plain; charset=utf-8" },
+  });
+}
+
+function vpTokenFromResponse(response: string): string | undefined {
+  const data = x401.decodeResultArtifact(response).credential_result?.data;
+  if (typeof data !== "object" || data === null || Array.isArray(data)) {
+    return undefined;
+  }
+  const vpToken = data.vp_token;
+  return typeof vpToken === "string" && vpToken.length > 0
+    ? vpToken
+    : undefined;
+}
+
+async function verifyProof(
+  context: X401Context,
+  response: string,
+): Promise<Response> {
+  let encodedVPToken: string | undefined;
   try {
-    const tokenObject = verifier.decodeTokenObject(headerValue);
-    return verifyToken(tokenObject.access_token);
-  } catch {
-    return null;
+    encodedVPToken = vpTokenFromResponse(response);
+  } catch (error) {
+    return errorResponse(400, `Malformed PROOF-RESPONSE: ${String(error)}`);
   }
-}
+  if (encodedVPToken === undefined) {
+    return errorResponse(
+      400,
+      "PROOF-RESPONSE must carry an inline credential_result with a vp_token",
+    );
+  }
 
-const STYLES = `
-  :root {
-    --default: #000e32;
-    --foreground: #ffffff;
-    --primary: #0046fa;
-    --primary-30: #82bdfa;
-    --primary-10: #c2e2ff;
-    --elevated: #0b1f3f;
-  }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    min-height: 100vh;
-    background:
-      radial-gradient(60rem 40rem at 20% -10%, rgba(0, 70, 250, 0.35), transparent 60%),
-      radial-gradient(50rem 40rem at 100% 0%, rgba(130, 189, 250, 0.18), transparent 55%),
-      var(--default);
-    color: var(--foreground);
-    font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-    line-height: 1.55;
-  }
-  main { max-width: 52rem; margin: 0 auto; padding: 4rem 1.5rem 5rem; }
-  .eyebrow {
-    color: var(--primary-30);
-    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
-    margin: 0 0 0.75rem;
-  }
-  h1 { font-size: 2rem; font-weight: 600; letter-spacing: -0.02em; margin: 0 0 0.75rem; }
-  h2 { font-size: 1.15rem; font-weight: 600; margin: 2.5rem 0 0.75rem; }
-  p { color: rgba(255, 255, 255, 0.82); margin: 0 0 1rem; }
-  a { color: var(--primary-30); }
-  .back {
-    display: inline-flex; align-items: center; gap: 0.35rem;
-    color: var(--primary-30); text-decoration: none; font-size: 0.875rem;
-    margin-bottom: 1.5rem;
-  }
-  .back:hover { color: #ffffff; }
-  .card {
-    background: linear-gradient(180deg, rgba(0, 50, 176, 0.25), rgba(11, 31, 63, 0.85));
-    border: 1px solid rgba(130, 189, 250, 0.18);
-    border-radius: 1rem; padding: 1.25rem 1.5rem; margin: 1.5rem 0;
-  }
-  .status { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 600; color: var(--primary-10); }
-  .badge {
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.8rem;
-    background: rgba(0, 70, 250, 0.25); border: 1px solid rgba(130, 189, 250, 0.3);
-    border-radius: 0.5rem; padding: 0.1rem 0.5rem;
-  }
-  pre {
-    background: #060f24; border: 1px solid rgba(130, 189, 250, 0.18);
-    border-radius: 0.625rem; padding: 0.9rem 1rem; overflow-x: auto;
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.8rem;
-    color: #cfe0ff; margin: 0.5rem 0 1.25rem;
-  }
-  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
-  ol { color: rgba(255, 255, 255, 0.82); padding-left: 1.25rem; }
-  li { margin: 0.35rem 0; }
-`;
-
-function shell(title: string, inner: string): string {
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>${title}</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-<style>${STYLES}</style></head><body><main><a class="back" href="/">&larr; Back to all demos</a>${inner}</main></body></html>`;
-}
-
-function grantedPage(claims: TokenClaims): string {
-  const claimsJson = JSON.stringify(claims.claims ?? {}, null, 2)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;");
-  return shell(
-    "x401 — Access granted",
-    `<p class="eyebrow">x401 protected resource</p>
-     <h1>Access granted</h1>
-     <p>You presented a valid x401 proof. This is the protected content behind the resource.</p>
-     <div class="card"><span class="status">&#10003; Verified presentation accepted</span></div>
-     <h2>Access token claims</h2>
-     <pre>${claimsJson}</pre>`,
-  );
-}
-
-function protectedPage(
-  proofRequired: string,
-  embeddedData: string,
-  mcpUrl: string,
-): string {
-  return shell(
-    "x401 — Proof required",
-    `<p class="eyebrow">For AI agents &middot; x401 protected resource</p>
-     <h1>This resource is protected</h1>
-     <p>It requires an <strong>x401 verifiable presentation</strong>. An AI agent completes the
-     presentation in your Proof wallet and retries with a token to access it.</p>
-
-     <h2>Access it through an AI agent</h2>
-     <p>Add Proof's x401 MCP server, then ask your agent to fetch this URL.</p>
-
-     <p><strong>Claude Code</strong></p>
-     <pre>claude mcp add --transport http proof ${mcpUrl}</pre>
-
-     <p><strong>Claude Desktop</strong> (<code>claude_desktop_config.json</code>)</p>
-     <pre>{
-  "mcpServers": {
-    "proof": {
-      "command": "npx",
-      "args": ["-y", "mcp-remote", "${mcpUrl}"]
+  const proofVerifier = createVerifier({ environment: context.environment });
+  try {
+    const presentation = await proofVerifier.verifyVPToken({
+      encodedVPToken,
+      aud: context.clientId,
+    });
+    const credential = presentation.proof_id_default?.[0];
+    if (credential === undefined) {
+      return errorResponse(
+        401,
+        "Presentation contains no proof_id_default credential",
+      );
     }
+    return new Response(grantedPage(credential.toJSON()), {
+      status: 200,
+      headers: HTML_HEADERS,
+    });
+  } catch (error) {
+    return errorResponse(401, `PROOF-RESPONSE rejected: ${String(error)}`);
   }
-}</pre>
-
-     <p><strong>ChatGPT</strong> (Settings &rarr; Connectors &rarr; Add custom connector)</p>
-     <pre>Name: proof
-Transport: HTTP / Streamable HTTP
-URL: ${mcpUrl}</pre>
-
-     <h2>Then</h2>
-     <ol>
-       <li>Tell your agent to fetch this URL.</li>
-       <li>It reads the requirement, completes the presentation in your Proof wallet, and exchanges it for a token.</li>
-       <li>It retries with the token and receives the protected content.</li>
-     </ol>
-
-     <h2>HTTP "proof-required" header</h2>
-     <p>Inspect the network HTTP response to locate the "proof-required" header that will contain the
-     following x401 requirement:</p>
-     <div class="card">
-       <p><span class="status">HTTP 401</span> &nbsp;<span class="badge">${HEADER.PROOF_REQUEST}</span></p>
-       <pre>${proofRequired}</pre>
-     </div>
-     ${embeddedData}`,
-  );
 }
 
 export async function GET(request: NextRequest) {
-  const origin = originFromRequest(request);
-
-  const presentation = request.headers.get(HEADER.PROOF_RESPONSE);
-  if (presentation) {
-    const claims = tokenClaims(presentation);
-    if (claims) {
-      return new Response(grantedPage(claims), {
-        status: 200,
-        headers: { "Content-Type": "text/html" },
-      });
-    }
+  const context = x401Context(request);
+  const response = request.headers.get(HEADER.PROOF_RESPONSE);
+  if (response === null) {
+    return proofRequired(context);
   }
-
-  const envParam = request.nextUrl.searchParams.get("env");
-  const envKey: EnvironmentKey = isEnvironmentKey(envParam)
-    ? envParam
-    : "fairfax";
-  const env = ENVIRONMENTS[envKey];
-  const loginHint = request.nextUrl.searchParams.get("login_hint");
-  const signedDcApiRequest = await createClient({
-    environment: env.environment,
-    clientId: env.clientId.merchant,
-    callbackUri: origin,
-    useSecuredAuthorizationRequest: true,
-    privateKeyFactory: getPrivateJwk,
-  }).signedDcApiRequest({
-    scope: "urn:proof:params:scope:verifiable-credentials:basic",
-    nonce: NONCE,
-    expectedOrigins: [
-      "http://localhost:3080",
-      "https://depletion-ruse-creasing.ngrok-free.dev",
-      "https://mcp.next.proof.com",
-      "https://mcp.staging.proof.com",
-      "https://mcp.fairfax.proof.com"
-    ],
-    ...(loginHint !== null && { loginHint }),
-  });
-
-  const payload = verifier.buildPayload({
-    credentialRequirements: {
-      digital: {
-        requests: [
-          {
-            protocol: DC_API_PROTOCOL.SIGNED,
-            data: { request: signedDcApiRequest } as unknown as JsonObject,
-          },
-        ],
-      },
-    },
-    oauth: { token_endpoint: `${origin}/x401/token-exchange` },
-  });
-  const proofRequired = verifier.encodePayload(payload);
-
-  return new Response(
-    protectedPage(
-      proofRequired,
-      verifier.embedHtmlData(payload),
-      MCP_URLS[envKey],
-    ),
-    {
-      status: 401,
-      headers: {
-        "Content-Type": "text/html",
-        [HEADER.PROOF_REQUEST]: proofRequired,
-      },
-    },
-  );
+  return verifyProof(context, response);
 }
