@@ -1,4 +1,5 @@
 import { type UseCase } from "./util";
+import { type EnvironmentKey } from "./environments";
 
 export type Presentation = { vpToken: string; result: Record<string, unknown> };
 
@@ -13,11 +14,12 @@ const fetchVPToken = async (responseCode: string): Promise<string> => {
 
 const verifyVPToken = async (
   token: string,
+  environmentKey: EnvironmentKey,
 ): Promise<Record<string, unknown>> => {
   const response = await fetch("/api/verify_vp_token", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ vp_token: token }),
+    body: JSON.stringify({ vp_token: token, environmentKey }),
   });
   const json = await response.json();
   if (!response.ok) {
@@ -32,6 +34,7 @@ const verifyVPToken = async (
 
 export async function consumePresentationFromHash(
   useCase: UseCase,
+  environmentKey: EnvironmentKey,
 ): Promise<Outcome | null> {
   const hash = window.location.hash.slice(1);
   if (!hash) return null;
@@ -45,7 +48,7 @@ export async function consumePresentationFromHash(
 
   try {
     const token = vpToken ?? (await fetchVPToken(responseCode!));
-    const result = await verifyVPToken(token);
+    const result = await verifyVPToken(token, environmentKey);
     return { presentation: { vpToken: token, result } };
   } catch (cause) {
     return { error: cause instanceof Error ? cause.message : String(cause) };

@@ -202,8 +202,8 @@ export default function Home() {
                 <LinkItem
                   href={`/x401?${query}`}
                   external
-                  title="x401 Protected Resource"
-                  subtitle="A resource gated by x401. Access it from an AI agent via Proof's MCP server."
+                  title="x401"
+                  subtitle="Enable AI agents to access x401 protected resources"
                   icon={
                     <LockIcon className="text-primary-30 h-[24px] w-[24px]" />
                   }
