@@ -7,6 +7,8 @@ export const MCP_URLS: Record<EnvironmentKey, string> = {
   fairfax: "https://mcp.fairfax.proof.com/mcp",
 };
 
+export const HTML_HEADERS = { "content-type": "text/html; charset=utf-8" };
+
 const STYLES = `
   :root {
     --default: #000e32;
@@ -50,11 +52,6 @@ const STYLES = `
     border-radius: 1rem; padding: 1.25rem 1.5rem; margin: 1.5rem 0;
   }
   .status { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 600; color: var(--primary-10); }
-  .badge {
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.8rem;
-    background: rgba(0, 70, 250, 0.25); border: 1px solid rgba(130, 189, 250, 0.3);
-    border-radius: 0.5rem; padding: 0.1rem 0.5rem;
-  }
   pre {
     background: #060f24; border: 1px solid rgba(130, 189, 250, 0.18);
     border-radius: 0.625rem; padding: 0.9rem 1rem; overflow-x: auto;
@@ -62,8 +59,6 @@ const STYLES = `
     color: #cfe0ff; margin: 0.5rem 0 1.25rem;
   }
   code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
-  ol { color: rgba(255, 255, 255, 0.82); padding-left: 1.25rem; }
-  li { margin: 0.35rem 0; }
 `;
 
 function escapeHtml(value: string): string {
@@ -92,56 +87,38 @@ export function grantedPage(claims: unknown): string {
   );
 }
 
-export function protectedPage({
-  proofRequestHeaderName,
-  proofRequired,
+export function instructionsPage({
   mcpUrl,
+  apiHost,
+  protectedUrl,
 }: {
-  proofRequestHeaderName: string;
-  proofRequired: string;
   mcpUrl: string;
+  apiHost: string;
+  protectedUrl: string;
 }): string {
   return shell(
-    "x401 — Proof required",
-    `<p class="eyebrow">For AI agents &middot; x401 protected resource</p>
-     <h1>This resource is protected</h1>
-     <p>It requires an <strong>x401 verifiable presentation</strong>. An AI agent completes the
-     presentation in your Proof wallet and retries with the result to access it.</p>
+    "x401 for Agents",
+    `<p class="eyebrow">For AI agents &middot; x401</p>
+     <h1>x401 for Agents</h1>
+     <p>Proof enables AI agents to access x401 protected resources, learn more about the x401
+     protocol at <a href="https://x401.id">x401.id</a>.</p>
 
-     <h2>Access it through an AI agent</h2>
-     <p>Add Proof's x401 MCP server, then ask your agent to fetch this URL.</p>
+     <h2>Configure x401 in your agents</h2>
 
      <p><strong>Claude Code</strong></p>
      <pre>claude mcp add --transport http proof ${mcpUrl}</pre>
 
-     <p><strong>Claude Desktop</strong> (<code>claude_desktop_config.json</code>)</p>
-     <pre>{
-  "mcpServers": {
-    "proof": {
-      "command": "npx",
-      "args": ["-y", "mcp-remote", "${mcpUrl}"]
-    }
-  }
-}</pre>
-
-     <p><strong>ChatGPT</strong> (Settings &rarr; Connectors &rarr; Add custom connector)</p>
+     <p><strong>Claude Desktop / ChatGPT</strong> (Settings &rarr; Connectors &rarr; Add custom connector)</p>
      <pre>Name: proof
 Transport: HTTP / Streamable HTTP
 URL: ${mcpUrl}</pre>
 
-     <h2>Then</h2>
-     <ol>
-       <li>Tell your agent to fetch this URL.</li>
-       <li>It reads the requirement and completes the presentation in your Proof wallet.</li>
-       <li>It retries with the presentation result and receives the protected content.</li>
-     </ol>
+     <p><strong>Meta Muse AI</strong></p>
+     <p>Muse AI doesn't need the MCP, learn skills directly at
+     <a href="${escapeHtml(apiHost)}">${escapeHtml(apiHost)}</a>.</p>
 
-     <h2>HTTP "proof-required" header</h2>
-     <p>Inspect the network HTTP response to locate the "proof-required" header that will contain the
-     following x401 requirement:</p>
-     <div class="card">
-       <p><span class="status">HTTP 401</span> &nbsp;<span class="badge">${proofRequestHeaderName}</span></p>
-       <pre>${escapeHtml(proofRequired)}</pre>
-     </div>`,
+     <h2>Try it</h2>
+     <p>Ask your agent to fetch this x401 protected resource:</p>
+     <pre>${escapeHtml(protectedUrl)}</pre>`,
   );
 }
