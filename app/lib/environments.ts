@@ -1,4 +1,5 @@
 import { type Environment, type ResponseMode } from "@proof.com/proof-vc-web";
+import { BASE_URLS } from "@proof.com/proof-vc-common/internal";
 
 export const RESPONSE_MODES: Array<ResponseMode> = ["fragment", "direct_post"];
 export type EnvironmentKey = "localhost" | "next" | "staging" | "fairfax";
@@ -94,13 +95,9 @@ export const isEnvironmentKey = (
 ): value is EnvironmentKey =>
   typeof value === "string" && (ENVIRONMENT_KEYS as string[]).includes(value);
 
-export const API_HOSTS: Record<Environment, string> = {
-  localhost: "https://api.local.dev-notarize.com",
-  next: "https://api.next.proof.com",
-  staging: "https://api.staging.proof.com",
-  sandbox: "https://api.fairfax.proof.com",
-  production: "https://api.proof.com",
-};
+export const API_HOSTS: Record<Environment, string> = Object.assign(BASE_URLS, {
+  localhost: process.env.LOCAL_API_HOST || BASE_URLS.localhost,
+});
 
 export const apiBaseUrl = (environmentKey: EnvironmentKey): string =>
   API_HOSTS[ENVIRONMENTS[environmentKey].environment];
