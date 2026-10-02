@@ -12,7 +12,7 @@ export const X401_CLIENT_NAME = "Proof x401 demo";
 export const X401_SCOPE = "urn:proof:params:scope:verifiable-credentials:basic";
 
 const DEFAULT_ENVIRONMENT_KEY: EnvironmentKey = "fairfax";
-const CIMD_PATH = "/x401/client";
+const CIMD_PATH = "/.well-known/proof-client.json";
 const PROTECTED_PATH = "/x401/protected";
 
 export const agentsTrustListUrl = (environment: Environment): string =>
